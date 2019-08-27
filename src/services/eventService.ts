@@ -1,4 +1,3 @@
-import { handleResponse } from 'services/helpers';
 import { authenticationService } from 'services/authenticationService';
 
 export const eventService = {
