@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { PrivateRoute } from 'ui/components/PrivateRoute';
+import { LoginDeterminer } from 'ui/containers/login/LoginDeterminerContainer';
+import { Login } from 'ui/containers/login/LoginContainer';
+import { Register } from 'ui/containers/register/RegisterContainer';
+import * as React from 'react';
+import styles from 'App.module.css';
+import { UserDashboard } from 'ui/containers/dashboard/UserDashboardContainer';
+
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.App}>
+      <Router>
+        <div style ={{ 'height': '100%', 'width': 'auto' }}>
+          <PrivateRoute exact path="/" component={LoginDeterminer} />
+          <Route exact path="/login" component={Login} />
+          {/*<PrivateRoute exact path="/admin" component={Admin} />*/}
+          <PrivateRoute exact path="/dashboard" component={UserDashboard} />
+          <Route exact path="/signup" component={Register} />
+        </div>
+      </Router>
     </div>
-  );
+  )
 }
 
 export default App;

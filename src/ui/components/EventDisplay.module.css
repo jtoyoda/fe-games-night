@@ -1,0 +1,12 @@
+.title {
+    flex-grow: 1;
+}
+
+.root {
+    margin: 8px;
+}
+
+.paper {
+    height: 190px;
+    width: 50px;
+}
