@@ -12,9 +12,11 @@ export const authenticationService = {
 };
 
 interface Gamer {
+  id: number;
   token: string;
   type: 'admin' | 'regular';
-  email: string
+  email: string;
+  name: string;
 }
 
 
@@ -34,7 +36,9 @@ function login(email: string, password: string) {
       const gamer: Gamer = {
         token: user.token,
         type: 'regular',
-        email
+        email,
+        name: user.name,
+        id: user.id,
       };
       localStorage.setItem('currentUser', JSON.stringify(gamer));
       currentUserSubject = gamer;

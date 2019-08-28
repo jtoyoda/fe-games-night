@@ -1,0 +1,31 @@
+.root {
+    padding: 8px;
+    width: auto;
+}
+
+.textField {
+    margin: 10px;
+    width: 300px;
+}
+
+.card {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.buttonProgress {
+    position: relative;
+    margin-left: -60px;
+}
+
+.buttonProgressAttending {
+    margin-left: -65px;
+}
+
+.withMargin {
+    margin: 8px
+}
+
+.title {
+    flex-grow: 1;
+}

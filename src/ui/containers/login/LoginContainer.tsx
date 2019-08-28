@@ -55,9 +55,10 @@ class LoginContainer extends React.Component<IProps, IOwnState> {
       }
     ).catch(() => {
       this.setState({
-        loginFailed: this.state.loginFailed + 1
+        loginFailed: this.state.loginFailed + 1,
+        loggingIn: false,
       });
-    }).finally(() => this.setState({loggingIn: false}));
+    })
   }
 
   keyPressHandler = (event: React.KeyboardEvent) => {

@@ -4,19 +4,28 @@ import { authenticationService } from 'services/authenticationService';
 import { AppBar, Button, Toolbar, Typography } from '@material-ui/core';
 import styles from 'ui/containers/dashboard/UserDashboardContainer.module.css';
 import { eventService, GameEvent } from 'services/eventService';
-import { EventDisplay } from 'ui/components/EventDisplay';
+import { EventsDisplay } from 'ui/components/EventsDisplay';
 
 
-interface IProps extends RouteComponentProps {}
-interface IState {events: GameEvent[]}
+interface IProps extends RouteComponentProps {
+}
+
+interface IState {
+  events: GameEvent[]
+  gameMap: { [key: number]: string }
+  loadingMap: { [key: number]: boolean }
+}
+
 class UserDashboardContainer extends React.Component<IProps, IState> {
 
   constructor(props: IProps) {
     super(props);
     this.state = {
-      events: []
+      events: [],
+      gameMap: {},
+      loadingMap: {},
     }
-    this.reload()
+    this.reload(true)
   }
 
   logout = () => {
@@ -24,21 +33,61 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
     this.props.history.push('/login');
   }
 
-  reload = () => {
-    eventService.loadEvents().then((events: GameEvent[]) => {console.log(events); this.setState({events});});
-
+  reload = (initialLoad?: boolean) => {
+    eventService.loadEvents().then((events: GameEvent[]) => {
+      if (initialLoad) {
+        this.setState({
+          events,
+          gameMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: it.game}), {}),
+          loadingMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: false}), {})
+        });
+      } else {
+        this.setState({
+          events,
+        })
+      }
+    });
   }
 
-  handleAttendingChange = (isAttending: boolean) => {
-    this.reload();
+  handleAttendingChange = (eventId: number, isAttending: boolean) => {
+    const loadingMap = this.state.loadingMap;
+    loadingMap[eventId] = true;
+    this.setState({
+      loadingMap
+    });
+    eventService.updateEventAttendance(eventId, isAttending).then(this.reload).finally(
+      () => {
+        loadingMap[eventId] = false;
+        this.setState({loadingMap})
+      });
   }
 
-  render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-    const user = authenticationService.currentUserValue;
-    const email = (user && user.email) || '';
+  handleGameChange = (eventId: number, game: string) => {
+    const gameMap = this.state.gameMap;
+    gameMap[eventId] = game;
+    this.setState({
+      gameMap,
+    })
+  }
+
+  handleGameChangeSubmit = (eventId: number) => {
+    const loadingMap = this.state.loadingMap;
+    loadingMap[eventId] = true;
+    this.setState({
+      loadingMap
+    });
+    eventService.updateEventGame(eventId, this.state.gameMap[eventId]).then(this.reload).finally(
+      () => {
+        loadingMap[eventId] = false;
+        this.setState({loadingMap});
+      },
+    )
+  }
+
+  render() {
     return (
       <div>
-        <AppBar position="static">
+        <AppBar position="sticky">
           <Toolbar>
             <Typography className={styles.title}>
               Board Game Schedule
@@ -50,7 +99,14 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
           <Typography variant={'h4'}>
             Your Upcoming Events
           </Typography>
-          <EventDisplay events={this.state.events} handleAttendingChange={this.handleAttendingChange} email={email}/>
+          <EventsDisplay
+            events={this.state.events}
+            handleAttendingChange={this.handleAttendingChange}
+            handleGameChange={this.handleGameChange}
+            handleGameChangeSubmit={this.handleGameChangeSubmit}
+            gameMap={this.state.gameMap}
+            loadingMap={this.state.loadingMap}
+          />
         </div>
       </div>
     )
