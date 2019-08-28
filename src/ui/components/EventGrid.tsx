@@ -111,7 +111,7 @@ export class EventGrid extends React.Component<IProps> {
             variant="contained"
             color="primary"
             className={styles.loginButton}
-            disabled={this.props.event.game === this.props.game}
+            disabled={this.props.event.game === this.props.game || this.props.loading}
             onClick={this.props.handleGameChangeSubmit}
           >
             Submit
@@ -140,7 +140,7 @@ export class EventGrid extends React.Component<IProps> {
                   <FormControlLabel
                     control={
                       <Switch checked={me.attending} onChange={this.handleAttendingChange}
-                              value="checkedA"/>
+                              value="checkedA" disabled={this.props.loading}/>
                     }
                     label="Attending"
                   />
