@@ -27,6 +27,7 @@ interface TextConfig {
   value: string | number;
   label: string;
   id: string;
+  type?: string;
 
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
   keyPressHandler?(event: React.KeyboardEvent): void;
@@ -57,6 +58,7 @@ export class EditGamerContainer extends React.Component<IProps, IState> {
       <TextField
         fullWidth
         margin="dense"
+        type={textConfig.type}
         id={textConfig.id}
         label={textConfig.label}
         value={textConfig.value}
@@ -104,6 +106,7 @@ export class EditGamerContainer extends React.Component<IProps, IState> {
               value: this.state.email,
               label: 'Email',
               id: 'email',
+              type: 'email',
               onChange: this.changeEmail,
               keyPressHandler: this.keyPressHandler
             })

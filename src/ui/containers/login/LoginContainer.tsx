@@ -88,6 +88,7 @@ class LoginContainer extends React.Component<IProps, IOwnState> {
             variant="outlined"
             label="Username"
             InputProps={inputProps}
+            type={'email'}
             value={this.state.username}
             onChange={this.onUsernameChange}
           />
