@@ -206,10 +206,11 @@ class AdminContainer extends React.Component<IProps, IState> {
 
   handleSubmitDeletePopup = (type: 'event' | 'night' | 'gamer', id: number) => () => {
     if (type === 'event') {
+      adminService.deleteEvent(id)
     } else if (type === 'night') {
       adminService.deleteNight(id)
     } else if (type === 'gamer') {
-
+      adminService.deleteGamer(id)
     }
     this.handleCloseDeletePopup()
   }
