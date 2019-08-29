@@ -139,7 +139,7 @@ export class EditEventContainer extends React.Component<IProps, IState> {
             id="datetime-local"
             label="Date"
             type="datetime-local"
-            defaultValue={this.state.date != null ? moment(this.state.date).format('YYYY-MM-DDTHH:mm')
+            defaultValue={this.state.date !== null && this.state.date !== -1 ? moment(this.state.date).format('YYYY-MM-DDTHH:mm')
               : moment(moment.now()).format('YYYY-MM-DDT18:30')}
             fullWidth
             margin={'dense'}
