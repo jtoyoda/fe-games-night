@@ -3,9 +3,9 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { authenticationService } from 'services/authenticationService';
 import { AppBar, Button, Grid, Toolbar, Typography } from '@material-ui/core';
 import styles from 'ui/containers/admin/AdminContainer.module.css';
-import { EditNightContainer } from 'ui/containers/admin/night/EditNightContainer';
-import { NightsDisplay } from 'ui/components/nights/NightsDisplay';
-import { adminService, CreateEvent, CreateGamer, CreateNight, Night } from 'services/adminService';
+import { EditGroupContainer } from 'ui/containers/admin/group/EditGroupContainer';
+import { GroupsDisplay } from 'ui/components/groups/GroupsDisplay';
+import { adminService, CreateEvent, CreateGamer, CreateGroup, Group } from 'services/adminService';
 import { Link } from '@material-ui/core'
 import { Link as RouterLink } from 'react-router-dom';
 import { capitalize } from '@material-ui/core/utils';
@@ -16,16 +16,16 @@ import { EditEventContainer } from 'ui/containers/admin/event/EditEventContainer
 import { GamersDisplay } from 'ui/components/gamers/GamersDisplay';
 import { EditGamerContainer } from 'ui/containers/admin/gamer/EditGamerContainer';
 
-type AdminType = 'event' | 'night' | 'gamer';
+type AdminType = 'event' | 'group' | 'gamer';
 
 interface IProps extends RouteComponentProps {
   type: AdminType;
 }
 
 interface IState {
-  nights: Night[];
-  editNightId?: number;
-  createNightPopupVisible: boolean;
+  groups: Group[];
+  editGroupId?: number;
+  createGroupPopupVisible: boolean;
   gamers: Gamer[];
   editGamerId?: number;
   createGamerPopupVisible: boolean;
@@ -44,14 +44,14 @@ class AdminContainer extends React.Component<IProps, IState> {
     this.state = {
       createEventPopupVisible: false,
       createGamerPopupVisible: false,
-      createNightPopupVisible: false,
+      createGroupPopupVisible: false,
       events: [],
       gamers: [],
-      nights: [],
+      groups: [],
       deleteConfirmationDialogType: 'event',
       deleteConfirmationDialogTitle: '',
     };
-    this.reloadNights();
+    this.reloadGroups();
     this.reloadEvents();
     this.reloadGamers();
   }
@@ -150,45 +150,45 @@ class AdminContainer extends React.Component<IProps, IState> {
   }
 
   /*
-   * Night functions
+   * Group functions
    */
 
-  onEditNight = (nightId: number) => () => {
-    this.setState({editNightId: nightId});
+  onEditGroup = (groupId: number) => () => {
+    this.setState({editGroupId: groupId});
   }
 
-  onCreateNight = () => {
-    this.setState({createNightPopupVisible: true})
+  onCreateGroup = () => {
+    this.setState({createGroupPopupVisible: true})
   }
 
-  handleCreateNight = (night: CreateNight) => {
-    adminService.createNight(night).then(() => {
-      this.reloadNights();
-      this.handleCloseCreateNight();
+  handleCreateGroup = (group: CreateGroup) => {
+    adminService.createGroup(group).then(() => {
+      this.reloadGroups();
+      this.handleCloseCreateGroup();
     })
   }
 
-  handleCloseCreateNight = () => {
-    this.setState({createNightPopupVisible: false})
+  handleCloseCreateGroup = () => {
+    this.setState({createGroupPopupVisible: false})
   }
 
-  handleEditNight = (night: CreateNight) => {
-    if (this.state.editNightId && this.state.editNightId >= 0) {
-      adminService.updateNight(this.state.editNightId, night).then(() => {
-        this.reloadNights();
-        this.handleCloseEditNight();
+  handleEditGroup = (group: CreateGroup) => {
+    if (this.state.editGroupId && this.state.editGroupId >= 0) {
+      adminService.updateGroup(this.state.editGroupId, group).then(() => {
+        this.reloadGroups();
+        this.handleCloseEditGroup();
       })
     }
   }
 
-  handleCloseEditNight = () => {
-    this.setState({editNightId: undefined})
+  handleCloseEditGroup = () => {
+    this.setState({editGroupId: undefined})
   }
 
-  reloadNights = () => {
-    adminService.loadNights().then((nights: Night[]) => {
+  reloadGroups = () => {
+    adminService.loadGroups().then((groups: Group[]) => {
       this.setState({
-        nights,
+        groups,
       });
     });
   }
@@ -204,11 +204,11 @@ class AdminContainer extends React.Component<IProps, IState> {
     });
   }
 
-  handleSubmitDeletePopup = (type: 'event' | 'night' | 'gamer', id: number) => () => {
+  handleSubmitDeletePopup = (type: AdminType, id: number) => () => {
     if (type === 'event') {
       adminService.deleteEvent(id).then(this.reloadEvents).then(this.handleCloseDeletePopup);
-    } else if (type === 'night') {
-      adminService.deleteNight(id).then(this.reloadNights).then(this.handleCloseDeletePopup);
+    } else if (type === 'group') {
+      adminService.deleteGroup(id).then(this.reloadGroups).then(this.handleCloseDeletePopup);
     } else if (type === 'gamer') {
       adminService.deleteGamer(id).then(this.reloadGamers).then(this.handleCloseDeletePopup);
     }
@@ -219,26 +219,26 @@ class AdminContainer extends React.Component<IProps, IState> {
   }
 
   render() {
-    const nights = (
+    const groups = (
       <div>
-        <NightsDisplay
-          nights={this.state.nights}
-          onEdit={this.onEditNight}
-          onCreate={this.onCreateNight}
-          onDelete={this.onDelete('night', "Night")}
+        <GroupsDisplay
+          groups={this.state.groups}
+          onEdit={this.onEditGroup}
+          onCreate={this.onCreateGroup}
+          onDelete={this.onDelete('group', "Group")}
         />
-        {this.state.createNightPopupVisible && <EditNightContainer
-          displayed={this.state.createNightPopupVisible}
+        {this.state.createGroupPopupVisible && <EditGroupContainer
+          displayed={this.state.createGroupPopupVisible}
           submitButtonTitle={'Create'}
-          handleClose={this.handleCloseCreateNight}
-          handleSubmit={this.handleCreateNight}
+          handleClose={this.handleCloseCreateGroup}
+          handleSubmit={this.handleCreateGroup}
         />}
-        {this.state.editNightId && <EditNightContainer
-          displayed={this.state.editNightId >= 0}
-          handleClose={this.handleCloseEditNight}
+        {this.state.editGroupId && <EditGroupContainer
+          displayed={this.state.editGroupId >= 0}
+          handleClose={this.handleCloseEditGroup}
           submitButtonTitle={'Update'}
-          handleSubmit={this.handleEditNight}
-          initialValues={this.state.nights.find((night) => night.id === this.state.editNightId)}
+          handleSubmit={this.handleEditGroup}
+          initialValues={this.state.groups.find((group) => group.id === this.state.editGroupId)}
         />
         }
       </div>
@@ -298,7 +298,7 @@ class AdminContainer extends React.Component<IProps, IState> {
             <Grid container={true} alignItems={'center'} justify={'space-between'}>
               <Grid item={true}>
                 <Link to={'/admin/events'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Events</Link>
-                <Link to={'/admin/nights'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Nights</Link>
+                <Link to={'/admin/groups'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Groups</Link>
                 <Link to={'/admin/gamers'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Gamers</Link>
 
               </Grid>
@@ -319,7 +319,7 @@ class AdminContainer extends React.Component<IProps, IState> {
           <Typography variant={'h4'}>
             {capitalize(this.props.type)}s
           </Typography>
-          {this.props.type === 'night' && nights}
+          {this.props.type === 'group' && groups}
           {this.props.type === 'event' && events}
           {this.props.type === 'gamer' && gamers}
         </div>

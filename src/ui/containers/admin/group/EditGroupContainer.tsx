@@ -7,21 +7,21 @@ import {
   DialogTitle, Grid, MenuItem, Select,
   TextField, Typography,
 } from '@material-ui/core';
-import { adminService, CreateNight, DayOfWeek, Night, RepeatType } from 'services/adminService';
-import styles from 'ui/containers/admin/night/EditNightContainer.module.css';
+import { adminService, CreateGroup, DayOfWeek, Group, RepeatType } from 'services/adminService';
+import styles from 'ui/containers/admin/group/EditGroupContainer.module.css';
 import { AttendeeSelector } from 'ui/components/attendees/AttendeeSelector';
 import { Gamer } from 'services/eventService';
 
 
 interface IProps {
   displayed: boolean
-  initialValues?: Night;
+  initialValues?: Group;
   submitButtonTitle: string;
   handleClose(): void;
-  handleSubmit(createNight: CreateNight): void
+  handleSubmit(createGroup: CreateGroup): void
 }
 
-interface IState extends CreateNight {
+interface IState extends CreateGroup {
   gamers: Gamer[]
 }
 
@@ -33,7 +33,7 @@ interface TextConfig {
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export class EditNightContainer extends React.Component<IProps, IState> {
+export class EditGroupContainer extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     if (props.initialValues) {
@@ -142,7 +142,7 @@ export class EditNightContainer extends React.Component<IProps, IState> {
   render() {
     return (
       <Dialog open={this.props.displayed}>
-        <DialogTitle id="form-dialog-title">Create Night</DialogTitle>
+        <DialogTitle id="form-dialog-title">Create Group</DialogTitle>
         <DialogContent>
           {
             this.createTextField({

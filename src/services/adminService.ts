@@ -1,10 +1,10 @@
 import { GameEvent, Gamer } from 'services/eventService';
 
 export const adminService = {
-  loadNights,
-  updateNight,
-  createNight,
-  deleteNight,
+  loadGroups: loadNights,
+  updateGroup: updateNight,
+  createGroup: createNight,
+  deleteGroup: deleteNight,
   loadGamers,
   updateGamer,
   createGamer,
@@ -19,7 +19,7 @@ export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDA
 
 export type RepeatType = 'WEEKLY' | 'BIWEEKLY' | 'NEVER'
 
-export interface Night {
+export interface Group {
   id: number;
   name: string;
   dayOfWeek: DayOfWeek;
@@ -30,7 +30,7 @@ export interface Night {
   createOn: string;
 }
 
-export interface CreateNight {
+export interface CreateGroup {
   name: string;
   dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
   attendees: number[];
@@ -53,7 +53,7 @@ export interface CreateEvent {
   game?: string;
 }
 
-function loadNights(): Promise<Night[]> {
+function loadNights(): Promise<Group[]> {
   const requestOptions = {
     method: 'GET',
     headers: {'Content-Type': 'application/json'},
@@ -67,7 +67,7 @@ function loadNights(): Promise<Night[]> {
     })
 }
 
-function updateNight(nightId: number, body: CreateNight) {
+function updateNight(nightId: number, body: CreateGroup) {
   const requestOptions = {
     method: 'PUT',
     headers: {'Content-Type': 'application/json'},
@@ -82,7 +82,7 @@ function updateNight(nightId: number, body: CreateNight) {
     })
 }
 
-function createNight(createNight: CreateNight) {
+function createNight(createNight: CreateGroup) {
   const requestOptions = {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},

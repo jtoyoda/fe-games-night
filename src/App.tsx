@@ -7,7 +7,7 @@ import * as React from 'react';
 import styles from 'App.module.css';
 import { UserDashboard } from 'ui/containers/dashboard/UserDashboardContainer';
 import { AdminRoute } from 'ui/components/AdminRoute';
-import { AdminEvent, AdminNight, AdminGamer } from 'ui/containers/admin/routing';
+import { AdminEvent, AdminGroup, AdminGamer } from 'ui/containers/admin/routing';
 
 
 const App: React.FC = () => {
@@ -18,7 +18,7 @@ const App: React.FC = () => {
           <Route exact path="/" component={LoginDeterminer} />
           <Route exact path="/login" component={Login} />
           <AdminRoute exact path="/admin/events" component={AdminEvent} />
-          <AdminRoute exact path="/admin/nights" component={AdminNight} />
+          <AdminRoute exact path="/admin/groups" component={AdminGroup} />
           <AdminRoute exact path="/admin/gamers" component={AdminGamer} />
           <PrivateRoute exact path="/dashboard" component={UserDashboard} />
           <Route exact path="/signup" component={Register} />

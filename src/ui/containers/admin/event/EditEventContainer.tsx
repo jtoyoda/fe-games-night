@@ -11,7 +11,7 @@ import {
   adminService,
   CreateEvent,
 } from 'services/adminService';
-import styles from 'ui/containers/admin/night/EditNightContainer.module.css';
+import styles from 'ui/containers/admin/group/EditGroupContainer.module.css';
 import { AttendeeSelector } from 'ui/components/attendees/AttendeeSelector';
 import { GameEvent, Gamer } from 'services/eventService';
 import moment from 'moment';

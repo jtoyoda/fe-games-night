@@ -13,10 +13,10 @@ export class AdminEvent extends React.Component<IProps> {
   }
 }
 
-export class AdminNight extends React.Component<IProps> {
+export class AdminGroup extends React.Component<IProps> {
   render() {
     return (
-      <Admin type={'night'}/>
+      <Admin type={'group'}/>
     );
   }
 }

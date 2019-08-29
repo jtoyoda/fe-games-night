@@ -4,7 +4,7 @@ import {
   Card, Fab,
   Grid, Typography,
 } from '@material-ui/core';
-import styles from 'ui/components/nights/NightsDisplay.module.css';
+import styles from 'ui/components/groups/GroupsDisplay.module.css';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Gamer } from 'services/eventService';
@@ -24,7 +24,7 @@ export class GamersDisplay extends React.Component<IProps> {
 
   createGamerGrid = (gamer: Gamer) => {
     return (
-      <Card className={styles.nightCard} key={`night-${gamer.id}`}>
+      <Card className={styles.groupCard} key={`night-${gamer.id}`}>
         <Grid container={true} direction={'column'}>
           <Grid container={true} justify={'space-between'}>
             <Grid item={true}>
