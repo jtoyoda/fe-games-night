@@ -28,9 +28,10 @@ export class NightsDisplay extends React.Component<IProps> {
     } else if (night.repeat === 'BIWEEKLY') {
       repeatText = 'Every other week on';
     }
+    const minuteDisplay = night.minute < 10 ? `0${night.minute}` : night.minute
     const timeDisplay = night.repeat !== 'NEVER' && (<Grid item={true}>
       <Typography variant={'subtitle1'}>
-        {repeatText} {capitalize(night.dayOfWeek.toLowerCase())} at {night.hour % 12}:{night.minute}{night.hour > 12 ? 'pm' : 'am'}
+        {repeatText} {capitalize(night.dayOfWeek.toLowerCase())} at {night.hour % 12}:{minuteDisplay}{night.hour > 12 ? 'pm' : 'am'}
       </Typography>
     </Grid>);
 
