@@ -295,17 +295,14 @@ class AdminContainer extends React.Component<IProps, IState> {
       <div>
         <AppBar position="sticky">
           <Toolbar>
-            <Grid container={true} alignItems={'center'}>
-              <Grid item={true} xs={2}>
-                <Link to={'/admin/events'} component={RouterLink} color={'inherit'}>Events</Link>
+            <Grid container={true} alignItems={'center'} justify={'space-between'}>
+              <Grid item={true}>
+                <Link to={'/admin/events'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Events</Link>
+                <Link to={'/admin/nights'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Nights</Link>
+                <Link to={'/admin/gamers'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Gamers</Link>
+
               </Grid>
-              <Grid item={true} xs={2}>
-                <Link to={'/admin/nights'} component={RouterLink} color={'inherit'}>Nights</Link>
-              </Grid>
-              <Grid item={true} xs={7}>
-                <Link to={'/admin/gamers'} component={RouterLink} color={'inherit'}>Users</Link>
-              </Grid>
-              <Grid item={true} xs={1}>
+              <Grid item={true}>
                 <Button color="inherit" onClick={this.logout}>Logout</Button>
               </Grid>
             </Grid>

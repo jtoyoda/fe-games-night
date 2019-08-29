@@ -6,3 +6,7 @@
     margin: 8px;
     overflow-y:auto;
 }
+
+.paddingRight {
+    padding-right: 16px;
+}
