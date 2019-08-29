@@ -4,8 +4,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import { GameEvent } from 'services/eventService'
-import styles from 'ui/components/EventsDisplay.module.css';
-import { EventGrid } from 'ui/components/EventGrid';
+import styles from 'ui/components/events/EventsDisplay.module.css';
+import { EventGrid } from 'ui/components/events/EventGrid';
 import moment from 'moment';
 
 interface IProps {

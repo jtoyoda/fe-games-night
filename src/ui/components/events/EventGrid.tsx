@@ -10,16 +10,21 @@ import {
   Typography,
 } from '@material-ui/core';
 import { GameEvent, GamerAttending } from 'services/eventService'
-import styles from 'ui/components/EventGrid.module.css';
+import styles from 'ui/components/events/EventGrid.module.css';
 import moment from 'moment';
 import { authenticationService } from 'services/authenticationService';
+import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
 
 interface IProps {
   event: GameEvent,
   game: string,
+
   handleAttendingChange(isAttending: boolean): void,
+
   handleGameChange(game: string): void,
+
   handleGameChangeSubmit(): void,
+
   loading: boolean,
 }
 
@@ -64,15 +69,6 @@ export class EventGrid extends React.Component<IProps> {
     );
   }
 
-  createAttendee = (attendee: GamerAttending) => {
-    return (
-      <div key={`${attendee.name}-${attendee.email}`}>
-        <Typography variant={'body1'} className={styles.withMargin}>
-          {attendee.name} ({attendee.email})
-        </Typography>
-      </div>
-    )
-  }
 
   render() {
     const me = this.getMe(this.props.event.attendees);
@@ -118,7 +114,8 @@ export class EventGrid extends React.Component<IProps> {
           </Button>
         </Grid>
         <Grid item={true}>
-          {this.props.loading && <CircularProgress size={24} color={'secondary'} className={styles.buttonProgress} />}
+          {this.props.loading &&
+          <CircularProgress size={24} color={'secondary'} className={styles.buttonProgress}/>}
         </Grid>
       </Grid>
     );
@@ -146,7 +143,8 @@ export class EventGrid extends React.Component<IProps> {
                   />
                 </Grid>
                 <Grid item={true}>
-                  {this.props.loading && <CircularProgress size={30} color={'secondary'} className={styles.buttonProgressAttending} />}
+                  {this.props.loading && <CircularProgress size={30} color={'secondary'}
+                                                           className={styles.buttonProgressAttending}/>}
                 </Grid>
               </Grid>
             </Grid>
@@ -157,31 +155,18 @@ export class EventGrid extends React.Component<IProps> {
           <Divider className={styles.divider}/>
           <Grid container={true} direction={'row'} justify={'space-between'} alignItems={'center'}>
             <Grid item={true} xs={6}>
-              <Card className={styles.withMargin}>
-                <Typography variant={'h6'} className={styles.withMargin}>
-                  Who's Attending
-                </Typography>
-                <Divider/>
-                {othersAttending && othersAttending.map(this.createAttendee)}
-                {othersAttending.length === 0 &&
-                <Typography variant={'body1'} className={styles.withMargin}>
-                  No one else is currently attending
-                </Typography>
-                }
-              </Card>
+              <AttendeeCard
+                attendees={othersAttending}
+                title={"Who's Attending"}
+                emptyText={'No one else is currently attending'}
+              />
             </Grid>
             <Grid item={true} xs={6}>
-              <Card className={styles.withMargin}>
-                <Typography variant={'h6'} className={styles.withMargin}>
-                  Who's Not Attending
-                </Typography>
-                <Divider/>
-                {othersNotAttending && othersNotAttending.map(this.createAttendee)}
-                {othersNotAttending.length === 0 &&
-                <Typography variant={'body1'} className={styles.withMargin}>
-                  No one is currently not attending
-                </Typography>}
-              </Card>
+              <AttendeeCard
+                attendees={othersNotAttending}
+                title={"Who's Not Attending"}
+                emptyText={'No one is currently not attending'}
+              />
             </Grid>
           </Grid>
         </Grid>

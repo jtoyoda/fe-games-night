@@ -1,4 +1,4 @@
-import { authenticationService } from 'services/authenticationService';
+import { getCurrentUserToken } from 'services/authenticationService';
 
 export const eventService = {
   loadEvents,
@@ -40,9 +40,7 @@ function loadEvents(): Promise<GameEvent[]> {
     })
 }
 
-function getCurrentUserToken(): string | null {
-  return authenticationService.currentUserValue && authenticationService.currentUserValue.token;
-}
+
 
 function updateEventAttendance(eventId: number, attending: boolean) {
   return _updateEvent(eventId, {attending: attending})

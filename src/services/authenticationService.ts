@@ -1,6 +1,6 @@
 import { handleResponse } from 'services/helpers';
 
-let currentUserSubject: Gamer | null = (localStorage.getItem('currentUser') &&
+let currentUserSubject: User | null = (localStorage.getItem('currentUser') &&
   JSON.parse(localStorage.getItem('currentUser') || "{'token': '','type': 'regular'}")) || null;
 
 export const authenticationService = {
@@ -8,10 +8,12 @@ export const authenticationService = {
   logout,
   setPassword,
   currentUser: currentUserSubject,
-  get currentUserValue () { return currentUserSubject }
+  get currentUserValue() {
+    return currentUserSubject
+  },
 };
 
-interface Gamer {
+interface User {
   id: number;
   token: string;
   type: 'admin' | 'regular';
@@ -22,18 +24,28 @@ interface Gamer {
 
 function login(email: string, password: string) {
   if (email === 'admin' && password === 'admin') {
-    localStorage.setItem('currentUser', JSON.stringify({'token': '', 'type': 'admin'}))
+    const gamer: User =  {
+      token: '',
+      type: 'admin',
+      email: 'admin',
+      name: 'admin',
+      id: -1
+    };
+    localStorage.setItem('currentUser', JSON.stringify(gamer));
+    currentUserSubject = gamer;
+
+    return Promise.resolve(gamer);
   }
   const requestOptions = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email, password}),
   };
 
   return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/auth/login`, requestOptions)
     .then(handleResponse)
     .then(user => {
-      const gamer: Gamer = {
+      const gamer: User = {
         token: user.token,
         type: 'regular',
         email,
@@ -56,10 +68,14 @@ function logout() {
 function setPassword(email: string, password: string) {
   const requestOptions = {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email, password}),
   };
 
   return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/auth/signup`, requestOptions)
     .then(handleResponse)
+}
+
+export function getCurrentUserToken(): string | null {
+  return authenticationService.currentUserValue && authenticationService.currentUserValue.token;
 }

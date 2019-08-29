@@ -4,7 +4,7 @@ import { authenticationService } from 'services/authenticationService';
 import { AppBar, Button, Toolbar, Typography } from '@material-ui/core';
 import styles from 'ui/containers/dashboard/UserDashboardContainer.module.css';
 import { eventService, GameEvent } from 'services/eventService';
-import { EventsDisplay } from 'ui/components/EventsDisplay';
+import { EventsDisplay } from 'ui/components/events/EventsDisplay';
 
 
 interface IProps extends RouteComponentProps {

@@ -7,10 +7,11 @@ interface IProps extends RouteComponentProps {}
 class LoginDeterminerContainer extends React.Component<IProps> {
   constructor(props: IProps) {
     super(props);
+    console.log(authenticationService.currentUserValue);
     if (!authenticationService.currentUserValue) {
       this.props.history.push('/login');
     } else if (authenticationService.currentUserValue.type === 'admin') {
-      this.props.history.push('/admin');
+      this.props.history.push('/admin/events');
     } else if (authenticationService.currentUserValue.type === 'regular') {
       this.props.history.push('/dashboard')
     } else {

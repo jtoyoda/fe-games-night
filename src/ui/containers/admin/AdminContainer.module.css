@@ -1,0 +1,8 @@
+.title {
+    flex-grow: 1;
+}
+
+.root {
+    margin: 8px;
+    overflow-y:auto;
+}

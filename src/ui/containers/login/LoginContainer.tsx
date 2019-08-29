@@ -47,12 +47,12 @@ class LoginContainer extends React.Component<IProps, IOwnState> {
 
   login = () => {
     this.setState({
-      loggingIn: true
+      loggingIn: true,
     })
     authenticationService.login(this.state.username, this.state.password).then(() => {
         this.props.history.push('/');
         return null;
-      }
+      },
     ).catch(() => {
       this.setState({
         loginFailed: this.state.loginFailed + 1,
@@ -83,7 +83,7 @@ class LoginContainer extends React.Component<IProps, IOwnState> {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
-          <img src={logo} alt="logo" className={styles.logo} />
+          <img src={logo} alt="logo" className={styles.logo}/>
           <TextField
             variant="outlined"
             label="Username"
@@ -110,7 +110,7 @@ class LoginContainer extends React.Component<IProps, IOwnState> {
           >
             Login
           </Button>
-          {this.state.loggingIn && <CircularProgress size={24} className={styles.buttonProgress} />}
+          {this.state.loggingIn && <CircularProgress size={24} className={styles.buttonProgress}/>}
           {loginFailed}
         </div>
       </div>
