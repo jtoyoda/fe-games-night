@@ -23,9 +23,17 @@
 }
 
 .withMargin {
-    margin: 8px
+    margin: 8px !important;
 }
 
 .title {
     flex-grow: 1;
+}
+
+.gameComponent {
+    padding-bottom: 20px;
+}
+
+.divider {
+    margin-bottom: 10px !important;
 }

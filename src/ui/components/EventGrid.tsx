@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   Button,
   Card,
-  CircularProgress,
+  CircularProgress, Divider,
   FormControlLabel,
   Grid,
   Switch,
@@ -79,10 +79,10 @@ export class EventGrid extends React.Component<IProps> {
     const othersAttending = this.getOthersAttending(this.props.event.attendees);
     const othersNotAttending = this.getOthersNotAttending(this.props.event.attendees);
     const gameComponent = this.props.event.picker.id !== me.id ? (
-      <Typography variant={'subtitle1'}>
+      <Typography variant={'subtitle1'} className={styles.gameComponent}>
         {
-          (this.props.event.game && `${this.props.event.picker.name} selected ${this.props.event.game}`)
-          || `No game has been chosen yet by ${this.props.event.picker.name}`
+          (this.props.event.game && `${this.props.event.picker.name} is the Sommelier. Their pick is ${this.props.event.game}`)
+          || `${this.props.event.picker.name} is the Sommelier. They have not picked a game yet`
         }
       </Typography>
     ) : (
@@ -154,22 +154,34 @@ export class EventGrid extends React.Component<IProps> {
           <Grid item={true}>
             {gameComponent}
           </Grid>
+          <Divider className={styles.divider}/>
           <Grid container={true} direction={'row'} justify={'space-between'} alignItems={'center'}>
             <Grid item={true} xs={6}>
-              <Typography variant={'h6'}>
-                Who's Attending
-              </Typography>
-              {othersAttending && othersAttending.map(this.createAttendee)}
-              {othersAttending.length === 0 &&
-              <Typography variant={'body1'}>No one else is currently attending</Typography>}
+              <Card className={styles.withMargin}>
+                <Typography variant={'h6'} className={styles.withMargin}>
+                  Who's Attending
+                </Typography>
+                <Divider/>
+                {othersAttending && othersAttending.map(this.createAttendee)}
+                {othersAttending.length === 0 &&
+                <Typography variant={'body1'} className={styles.withMargin}>
+                  No one else is currently attending
+                </Typography>
+                }
+              </Card>
             </Grid>
             <Grid item={true} xs={6}>
-              <Typography variant={'h6'}>
-                Who's Not Attending
-              </Typography>
-              {othersNotAttending && othersNotAttending.map(this.createAttendee)}
-              {othersNotAttending.length === 0 &&
-              <Typography variant={'body1'}>Everyone is coming!</Typography>}
+              <Card className={styles.withMargin}>
+                <Typography variant={'h6'} className={styles.withMargin}>
+                  Who's Not Attending
+                </Typography>
+                <Divider/>
+                {othersNotAttending && othersNotAttending.map(this.createAttendee)}
+                {othersNotAttending.length === 0 &&
+                <Typography variant={'body1'} className={styles.withMargin}>
+                  No one is currently not attending
+                </Typography>}
+              </Card>
             </Grid>
           </Grid>
         </Grid>
