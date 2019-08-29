@@ -8,16 +8,17 @@ import {
   Typography,
 } from '@material-ui/core';
 import * as React from 'react';
-import styles from 'ui/containers/admin/EditNightContainer.module.css';
+import styles from 'ui/components/attendees/AttendeeSelector.module.css';
 import { Gamer } from 'services/eventService';
 
 
 interface IProps {
   attendees: number[];
   choices: Gamer[];
+  title: string;
+
   changeAttendees(event: React.ChangeEvent<{ value: unknown }>): void;
 }
-
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -37,7 +38,7 @@ export class AttendeeSelector extends React.Component<IProps> {
             className={styles.selector} direction={'column'}>
         <Grid item={true}>
           <Typography>
-            Members:
+            {this.props.title}:
           </Typography>
         </Grid>
         <Grid item={true}>
@@ -49,14 +50,14 @@ export class AttendeeSelector extends React.Component<IProps> {
             onChange={this.props.changeAttendees}
             input={<Input id="select-multiple"/>}
             renderValue={selected => (selected as number[]).map((gamerId) =>
-              this.props.choices.find((gamer)=>gamer.id === gamerId)
+              this.props.choices.find((gamer) => gamer.id === gamerId),
             ).map((gamer) => gamer && gamer.name).join(', ')}
             MenuProps={MenuProps}
           >
             {this.props.choices.map(choice => (
               <MenuItem key={choice.id} value={choice.id}>
-                <Checkbox checked={this.props.attendees.indexOf(choice.id) > -1} />
-                <ListItemText primary={choice.name} />
+                <Checkbox checked={this.props.attendees.indexOf(choice.id) > -1}/>
+                <ListItemText primary={choice.name}/>
               </MenuItem>
             ))}
           </Select>

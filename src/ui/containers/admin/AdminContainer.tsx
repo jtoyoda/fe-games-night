@@ -3,21 +3,38 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { authenticationService } from 'services/authenticationService';
 import { AppBar, Button, Grid, Toolbar, Typography } from '@material-ui/core';
 import styles from 'ui/containers/admin/AdminContainer.module.css';
-import { EditNightContainer } from 'ui/containers/admin/EditNightContainer';
-import { NightDisplay } from 'ui/components/nights/NightDisplay';
-import { adminService, CreateNight, Night } from 'services/adminService';
+import { EditNightContainer } from 'ui/containers/admin/night/EditNightContainer';
+import { NightsDisplay } from 'ui/components/nights/NightsDisplay';
+import { adminService, CreateEvent, CreateGamer, CreateNight, Night } from 'services/adminService';
 import { Link } from '@material-ui/core'
 import { Link as RouterLink } from 'react-router-dom';
+import { capitalize } from '@material-ui/core/utils';
+import { GameEvent, Gamer } from 'services/eventService';
+import { DeleteDialog } from 'ui/components/delete/DeleteDialog';
+import { AdminEventsDisplay } from 'ui/components/adminEvents/AdminEventsDisplay';
+import { EditEventContainer } from 'ui/containers/admin/event/EditEventContainer';
+import { GamersDisplay } from 'ui/components/gamers/GamersDisplay';
+import { EditGamerContainer } from 'ui/containers/admin/gamer/EditGamerContainer';
 
+type AdminType = 'event' | 'night' | 'gamer';
 
 interface IProps extends RouteComponentProps {
-  isEvent?: boolean;
+  type: AdminType;
 }
 
 interface IState {
   nights: Night[];
-  editId?: number;
+  editNightId?: number;
   createNightPopupVisible: boolean;
+  gamers: Gamer[];
+  editGamerId?: number;
+  createGamerPopupVisible: boolean;
+  events: GameEvent[];
+  editEventId?: number;
+  createEventPopupVisible: boolean;
+  deleteConfirmationDialogType: AdminType;
+  deleteConfirmationDialogTitle: string;
+  deleteConfirmationDialogId?: number;
 }
 
 class AdminContainer extends React.Component<IProps, IState> {
@@ -25,10 +42,18 @@ class AdminContainer extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      nights: [],
+      createEventPopupVisible: false,
+      createGamerPopupVisible: false,
       createNightPopupVisible: false,
-    }
-    this.reload(true)
+      events: [],
+      gamers: [],
+      nights: [],
+      deleteConfirmationDialogType: 'event',
+      deleteConfirmationDialogTitle: '',
+    };
+    this.reloadNights();
+    this.reloadEvents();
+    this.reloadGamers();
   }
 
   logout = () => {
@@ -36,22 +61,100 @@ class AdminContainer extends React.Component<IProps, IState> {
     this.props.history.push('/login');
   }
 
-  reload = (initialLoad?: boolean) => {
-    adminService.loadNights().then((nights: Night[]) => {
-      if (initialLoad) {
-        this.setState({
-          nights,
-        });
-      } else {
-        this.setState({
-          nights,
-        })
-      }
+  /*
+ * Gamer functions
+ */
+
+  onEditGamer = (gamerId: number) => () => {
+    this.setState({editGamerId: gamerId});
+  }
+
+  onCreateGamer = () => {
+    this.setState({createGamerPopupVisible: true})
+  }
+
+  handleCreateGamer = (gamer: CreateGamer) => {
+    adminService.createGamer(gamer).then(() => {
+      this.reloadGamers();
+      this.handleCloseCreateGamer();
+    })
+  }
+
+  handleCloseCreateGamer = () => {
+    this.setState({createGamerPopupVisible: false})
+  }
+
+  handleEditGamer = (gamer: CreateGamer) => {
+    if (this.state.editGamerId && this.state.editGamerId >= 0) {
+      adminService.updateGamer(this.state.editGamerId, gamer).then(() => {
+        this.reloadGamers();
+        this.handleCloseEditGamer();
+      })
+    }
+  }
+
+  handleCloseEditGamer = () => {
+    this.setState({editGamerId: undefined})
+  }
+
+  reloadGamers = () => {
+    adminService.loadGamers().then((gamers: Gamer[]) => {
+      this.setState({
+        gamers,
+      });
     });
   }
 
-  onEdit = (nightId: number) => () => {
-    this.setState({editId: nightId});
+  /*
+   * Event functions
+   */
+
+  onEditEvent = (eventId: number) => () => {
+    this.setState({editEventId: eventId});
+  }
+
+  onCreateEvent = () => {
+    this.setState({createEventPopupVisible: true})
+  }
+
+  handleCreateEvent = (event: CreateEvent) => {
+    adminService.createEvent(event).then(() => {
+      this.reloadEvents();
+      this.handleCloseCreateEvent();
+    })
+  }
+
+  handleCloseCreateEvent = () => {
+    this.setState({createEventPopupVisible: false})
+  }
+
+  handleEditEvent = (event: CreateEvent) => {
+    if (this.state.editEventId && this.state.editEventId >= 0) {
+      adminService.updateEvent(this.state.editEventId, event).then(() => {
+        this.reloadEvents();
+        this.handleCloseEditEvent();
+      })
+    }
+  }
+
+  handleCloseEditEvent = () => {
+    this.setState({editEventId: undefined})
+  }
+
+  reloadEvents = () => {
+    adminService.loadEvents().then((events: GameEvent[]) => {
+      this.setState({
+        events,
+      });
+    });
+  }
+
+  /*
+   * Night functions
+   */
+
+  onEditNight = (nightId: number) => () => {
+    this.setState({editNightId: nightId});
   }
 
   onCreateNight = () => {
@@ -60,7 +163,7 @@ class AdminContainer extends React.Component<IProps, IState> {
 
   handleCreateNight = (night: CreateNight) => {
     adminService.createNight(night).then(() => {
-      this.reload();
+      this.reloadNights();
       this.handleCloseCreateNight();
     })
   }
@@ -70,28 +173,59 @@ class AdminContainer extends React.Component<IProps, IState> {
   }
 
   handleEditNight = (night: CreateNight) => {
-    if (this.state.editId && this.state.editId >= 0) {
-      adminService.updateNight(this.state.editId, night).then(() => {
-        this.reload();
+    if (this.state.editNightId && this.state.editNightId >= 0) {
+      adminService.updateNight(this.state.editNightId, night).then(() => {
+        this.reloadNights();
         this.handleCloseEditNight();
       })
     }
   }
 
   handleCloseEditNight = () => {
-    this.setState({editId: undefined})
+    this.setState({editNightId: undefined})
+  }
+
+  reloadNights = () => {
+    adminService.loadNights().then((nights: Night[]) => {
+      this.setState({
+        nights,
+      });
+    });
+  }
+
+  /*
+   * Delete Popup functions
+   */
+  onDelete = (type: AdminType, title: string) => (id: number) => () => {
+    this.setState({
+      deleteConfirmationDialogId: id,
+      deleteConfirmationDialogType: type,
+      deleteConfirmationDialogTitle: title,
+    });
+  }
+
+  handleSubmitDeletePopup = (type: 'event' | 'night' | 'gamer', id: number) => () => {
+    if (type === 'event') {
+    } else if (type === 'night') {
+      adminService.deleteNight(id)
+    } else if (type === 'gamer') {
+
+    }
+    this.handleCloseDeletePopup()
+  }
+
+  handleCloseDeletePopup = () => {
+    this.setState({deleteConfirmationDialogId: undefined})
   }
 
   render() {
     const nights = (
-      <div className={styles.root}>
-        <Typography variant={'h4'}>
-          Nights
-        </Typography>
-        <NightDisplay
+      <div>
+        <NightsDisplay
           nights={this.state.nights}
-          onEdit={this.onEdit}
-          onCreateNight={this.onCreateNight}
+          onEdit={this.onEditNight}
+          onCreate={this.onCreateNight}
+          onDelete={this.onDelete('night', "Night")}
         />
         {this.state.createNightPopupVisible && <EditNightContainer
           displayed={this.state.createNightPopupVisible}
@@ -99,21 +233,62 @@ class AdminContainer extends React.Component<IProps, IState> {
           handleClose={this.handleCloseCreateNight}
           handleSubmit={this.handleCreateNight}
         />}
-        {this.state.editId && <EditNightContainer
-          displayed={this.state.editId >= 0}
+        {this.state.editNightId && <EditNightContainer
+          displayed={this.state.editNightId >= 0}
           handleClose={this.handleCloseEditNight}
           submitButtonTitle={'Update'}
           handleSubmit={this.handleEditNight}
-          initialValues={this.state.nights.find((night) => night.id === this.state.editId)}
-          />
-          }
+          initialValues={this.state.nights.find((night) => night.id === this.state.editNightId)}
+        />
+        }
       </div>
     );
     const events = (
-      <div className={styles.root}>
-        <Typography variant={'h4'}>
-          Events
-        </Typography>
+      <div>
+        <AdminEventsDisplay
+          events={this.state.events}
+          onEdit={this.onEditEvent}
+          onCreate={this.onCreateEvent}
+          onDelete={this.onDelete('event', "Event")}
+        />
+        {this.state.createEventPopupVisible && <EditEventContainer
+          displayed={this.state.createEventPopupVisible}
+          submitButtonTitle={'Create'}
+          handleClose={this.handleCloseCreateEvent}
+          handleSubmit={this.handleCreateEvent}
+        />}
+        {this.state.editEventId && <EditEventContainer
+          displayed={this.state.editEventId >= 0}
+          handleClose={this.handleCloseEditEvent}
+          submitButtonTitle={'Update'}
+          handleSubmit={this.handleEditEvent}
+          initialValues={this.state.events.find((event) => event.id === this.state.editEventId)}
+        />
+        }
+      </div>
+    );
+    const gamers = (
+      <div>
+        <GamersDisplay
+          gamers={this.state.gamers}
+          onEdit={this.onEditGamer}
+          onCreate={this.onCreateGamer}
+          onDelete={this.onDelete('gamer', "Gamer")}
+        />
+        {this.state.createGamerPopupVisible && <EditGamerContainer
+          displayed={this.state.createGamerPopupVisible}
+          submitButtonTitle={'Create'}
+          handleClose={this.handleCloseCreateGamer}
+          handleSubmit={this.handleCreateGamer}
+        />}
+        {this.state.editGamerId && <EditGamerContainer
+          displayed={this.state.editGamerId >= 0}
+          handleClose={this.handleCloseEditGamer}
+          submitButtonTitle={'Update'}
+          handleSubmit={this.handleEditGamer}
+          initialValues={this.state.gamers.find((gamer) => gamer.id === this.state.editGamerId)}
+        />
+        }
       </div>
     );
     return (
@@ -122,10 +297,13 @@ class AdminContainer extends React.Component<IProps, IState> {
           <Toolbar>
             <Grid container={true} alignItems={'center'}>
               <Grid item={true} xs={1}>
+                <Link to={'/admin/events'} component={RouterLink} color={'inherit'}>Events</Link>
+              </Grid>
+              <Grid item={true} xs={1}>
                 <Link to={'/admin/nights'} component={RouterLink} color={'inherit'}>Nights</Link>
               </Grid>
-              <Grid item={true} xs={10}>
-                <Link to={'/admin/events'} component={RouterLink} color={'inherit'}>Events</Link>
+              <Grid item={true} xs={9}>
+                <Link to={'/admin/gamers'} component={RouterLink} color={'inherit'}>Users</Link>
               </Grid>
               <Grid item={true} xs={1}>
                 <Button color="inherit" onClick={this.logout}>Logout</Button>
@@ -133,8 +311,22 @@ class AdminContainer extends React.Component<IProps, IState> {
             </Grid>
           </Toolbar>
         </AppBar>
-        {this.props.isEvent === undefined && nights}
-        {this.props.isEvent && events}
+        {this.state.deleteConfirmationDialogId && <DeleteDialog
+          title={this.state.deleteConfirmationDialogTitle}
+          onSubmit={this.handleSubmitDeletePopup(this.state.deleteConfirmationDialogType,
+            this.state.deleteConfirmationDialogId)}
+          onClose={this.handleCloseDeletePopup}
+        />
+        }
+        <div className={styles.root}>
+          <Typography variant={'h4'}>
+            {capitalize(this.props.type)}s
+          </Typography>
+          {this.props.type === 'night' && nights}
+          {this.props.type === 'event' && events}
+          {this.props.type === 'gamer' && gamers}
+        </div>
+
       </div>
     )
   }

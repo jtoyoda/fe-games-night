@@ -18,14 +18,13 @@ import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
 interface IProps {
   event: GameEvent,
   game: string,
+  loading: boolean,
 
   handleAttendingChange(isAttending: boolean): void,
 
   handleGameChange(game: string): void,
 
   handleGameChangeSubmit(): void,
-
-  loading: boolean,
 }
 
 export class EventGrid extends React.Component<IProps> {
@@ -75,13 +74,26 @@ export class EventGrid extends React.Component<IProps> {
     const othersAttending = this.getOthersAttending(this.props.event.attendees);
     const othersNotAttending = this.getOthersNotAttending(this.props.event.attendees);
     const gameComponent = this.props.event.picker.id !== me.id ? (
-      <Typography variant={'subtitle1'} className={styles.gameComponent}>
+      <div>
         {
-          (this.props.event.game && `${this.props.event.picker.name} is the Sommelier. Their pick is ${this.props.event.game}`)
-          || `${this.props.event.picker.name} is the Sommelier. They have not picked a game yet`
+          this.props.event.game && <Grid container={true}>
+          <Typography variant={'subtitle1'} className={styles.gameComponent}>
+            {`${this.props.event.picker.name} is the Sommelier. Their pick is:`}&nbsp;
+          </Typography>
+          <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>
+            {this.props.event.game}
+          </Typography>
+          </Grid>
         }
-      </Typography>
-    ) : (
+        {
+          this.props.event.game === null &&
+          <Typography variant={'subtitle1'} className={styles.gameComponent}>
+            {`${this.props.event.picker.name} is the Sommelier. They have not picked a game yet`}
+          </Typography>
+        }
+        </div>
+    ) :
+    (
       <Grid container={true} alignItems={'center'}>
         <Grid item={true}>
           <Typography>
@@ -173,4 +185,4 @@ export class EventGrid extends React.Component<IProps> {
       </Card>
     )
   }
-}
+  }

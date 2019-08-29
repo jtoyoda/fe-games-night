@@ -4,25 +4,22 @@ import {
   Card, Fab,
   Grid, Typography,
 } from '@material-ui/core';
-import styles from 'ui/components/nights/NightDisplay.module.css';
+import styles from 'ui/components/nights/NightsDisplay.module.css';
 import { Night } from 'services/adminService';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
+import { capitalize } from '@material-ui/core/utils';
 
 
 interface IProps {
   nights: Night[];
-
   onEdit(nightId: number): () => void;
-
-  onCreateNight(): void;
+  onCreate(): void;
+  onDelete(nightId: number): () => void;
 }
 
-function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
-export class NightDisplay extends React.Component<IProps> {
+export class NightsDisplay extends React.Component<IProps> {
 
   createNightGrid = (night: Night) => {
     let repeatText = '';
@@ -47,10 +44,20 @@ export class NightDisplay extends React.Component<IProps> {
               </Typography>
             </Grid>
             <Grid item={true}>
-              <Fab color="secondary" size={'small'} aria-label="edit"
-                   onClick={this.props.onEdit(night.id)}>
-                <EditIcon/>
-              </Fab>
+              <Grid container={true}>
+                <Grid item={true} className={styles.fab}>
+                  <Fab color="primary" size={'small'} aria-label="edit"
+                       onClick={this.props.onEdit(night.id)}>
+                    <EditIcon/>
+                  </Fab>
+                </Grid>
+                <Grid item={true} className={styles.fab}>
+                  <Fab color="secondary" size={'small'} aria-label="edit"
+                       onClick={this.props.onDelete(night.id)}>
+                    <DeleteIcon/>
+                  </Fab>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
           {timeDisplay}
@@ -73,7 +80,7 @@ export class NightDisplay extends React.Component<IProps> {
           {this.props.nights.map(this.createNightGrid)}
         </Grid>
         <Grid item={true} className={styles.createButtonGrid}>
-          <Button onClick={this.props.onCreateNight} variant={'outlined'} color={'secondary'}
+          <Button onClick={this.props.onCreate} variant={'outlined'} color={'secondary'}
                   className={styles.createButton}>
             Create Night
           </Button>

@@ -8,7 +8,7 @@ import {
   TextField, Typography,
 } from '@material-ui/core';
 import { adminService, CreateNight, DayOfWeek, Night, RepeatType } from 'services/adminService';
-import styles from 'ui/containers/admin/EditNightContainer.module.css';
+import styles from 'ui/containers/admin/night/EditNightContainer.module.css';
 import { AttendeeSelector } from 'ui/components/attendees/AttendeeSelector';
 import { Gamer } from 'services/eventService';
 
@@ -220,6 +220,7 @@ export class EditNightContainer extends React.Component<IProps, IState> {
             attendees={this.state.attendees}
             choices={this.state.gamers}
             changeAttendees={this.changeAttendees}
+            title={'Members'}
           />
         </DialogContent>
         <DialogActions>
@@ -231,6 +232,6 @@ export class EditNightContainer extends React.Component<IProps, IState> {
           </Button>
         </DialogActions>
       </Dialog>
-    )
+    );
   }
 }

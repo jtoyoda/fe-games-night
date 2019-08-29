@@ -11,8 +11,20 @@
     width: auto;
 }
 
-.nightCard {
+.eventCard {
     padding: 8px;
     width: auto;
     margin-top: 10px;
+}
+
+.fab {
+    padding-left: 8px;
+}
+
+.gameComponent {
+    padding-bottom: 20px;
+}
+
+.divider {
+    margin-bottom: 10px !important;
 }
