@@ -1,12 +1,10 @@
 import * as React from 'react';
 import {
-  Button,
   Card,
   CircularProgress, Divider,
   FormControlLabel,
   Grid,
   Switch,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import { GameEvent, GamerAttending } from 'services/eventService'
@@ -14,6 +12,8 @@ import styles from 'ui/components/events/EventGrid.module.css';
 import moment from 'moment';
 import { authenticationService } from 'services/authenticationService';
 import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
+import { GameDisplay } from 'ui/components/gamePick/GameDisplay';
+import { UpdatableGameSelectDisplay } from 'ui/components/gamePick/UpdatableGameSelectDisplay';
 
 interface IProps {
   event: GameEvent,
@@ -73,64 +73,19 @@ export class EventGrid extends React.Component<IProps> {
     const me = this.getMe(this.props.event.attendees);
     const othersAttending = this.getOthersAttending(this.props.event.attendees);
     const othersNotAttending = this.getOthersNotAttending(this.props.event.attendees);
+    const event = this.props.event;
     const gameComponent = this.props.event.picker.id !== me.id ? (
-      <div>
-        {
-          this.props.event.game && <Grid container={true}>
-          <Typography variant={'subtitle1'} className={styles.gameComponent}>
-            {`${this.props.event.picker.name} is the Sommelier. Their pick is:`}&nbsp;
-          </Typography>
-          <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>
-            {this.props.event.game}
-          </Typography>
-          </Grid>
-        }
-        {
-          this.props.event.game === null &&
-          <Typography variant={'subtitle1'} className={styles.gameComponent}>
-            {`${this.props.event.picker.name} is the Sommelier. They have not picked a game yet`}
-          </Typography>
-        }
-        </div>
-    ) :
-    (
-      <Grid container={true} alignItems={'center'}>
-        <Grid item={true}>
-          <Typography>
-            You are the Sommelier. Your pick is
-          </Typography>
-        </Grid>
-        <Grid item={true}>
-          <TextField
-            variant="outlined"
-            label="Game Choice"
-            margin="dense"
-            InputProps={{
-              classes: {
-                root: styles.textField,
-              },
-            }}
-            value={this.props.game || ''}
-            onChange={this.handleGameChange}
-          />
-        </Grid>
-        <Grid item={true}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={styles.loginButton}
-            disabled={this.props.event.game === this.props.game || this.props.loading}
-            onClick={this.props.handleGameChangeSubmit}
-          >
-            Submit
-          </Button>
-        </Grid>
-        <Grid item={true}>
-          {this.props.loading &&
-          <CircularProgress size={24} color={'secondary'} className={styles.buttonProgress}/>}
-        </Grid>
-      </Grid>
-    );
+        <GameDisplay event={event}/>
+      ) :
+      (
+        <UpdatableGameSelectDisplay
+          event={event}
+          loading={this.props.loading}
+          game={this.props.event.game}
+          handleGameChange={this.handleGameChange}
+          handleGameChangeSubmit={this.props.handleGameChangeSubmit}
+        />
+      );
     return (
       <Card key={`${this.props.event.name}-${this.props.event.date}`} className={styles.card}>
         <Grid container={true} direction={'column'} className={styles.root}>
@@ -185,4 +140,4 @@ export class EventGrid extends React.Component<IProps> {
       </Card>
     )
   }
-  }
+}

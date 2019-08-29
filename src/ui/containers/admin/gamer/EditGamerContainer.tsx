@@ -29,6 +29,7 @@ interface TextConfig {
   id: string;
 
   onChange(event: React.ChangeEvent<HTMLInputElement>): void;
+  keyPressHandler?(event: React.KeyboardEvent): void;
 }
 
 export class EditGamerContainer extends React.Component<IProps, IState> {
@@ -60,6 +61,7 @@ export class EditGamerContainer extends React.Component<IProps, IState> {
         label={textConfig.label}
         value={textConfig.value}
         onChange={textConfig.onChange}
+        onKeyPress={textConfig.keyPressHandler}
       />
     );
   }
@@ -76,6 +78,12 @@ export class EditGamerContainer extends React.Component<IProps, IState> {
     this.setState({
       email,
     });
+  }
+
+  keyPressHandler = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      this.handleCreate();
+    }
   }
 
   render() {
@@ -97,6 +105,7 @@ export class EditGamerContainer extends React.Component<IProps, IState> {
               label: 'Email',
               id: 'email',
               onChange: this.changeEmail,
+              keyPressHandler: this.keyPressHandler
             })
           }
         </DialogContent>

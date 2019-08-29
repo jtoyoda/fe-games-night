@@ -13,11 +13,6 @@
     margin-bottom: 16px;
 }
 
-.buttonProgress {
-    position: relative;
-    margin-left: -60px;
-}
-
 .buttonProgressAttending {
     margin-left: -65px;
 }
@@ -28,10 +23,6 @@
 
 .title {
     flex-grow: 1;
-}
-
-.gameComponent {
-    padding-bottom: 20px;
 }
 
 .divider {

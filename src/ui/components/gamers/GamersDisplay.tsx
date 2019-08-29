@@ -58,7 +58,7 @@ export class GamersDisplay extends React.Component<IProps> {
     return (
       <Grid container={true} className={styles.root} direction={'column'}>
         <Grid item={true}>
-          {this.props.gamers.map(this.createGamerGrid)}
+          {this.props.gamers.sort((a, b) => a.name > b.name ? 1 : -1).map(this.createGamerGrid)}
         </Grid>
         <Grid item={true} className={styles.createButtonGrid}>
           <Button onClick={this.props.onCreate} variant={'outlined'} color={'secondary'}

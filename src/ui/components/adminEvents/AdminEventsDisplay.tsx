@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
 import { GameEvent, GamerAttending } from 'services/eventService';
 import moment from 'moment';
+import { GameDisplay } from 'ui/components/gamePick/GameDisplay';
 
 
 interface IProps {
@@ -39,26 +40,6 @@ export class AdminEventsDisplay extends React.Component<IProps> {
   createEventGrid = (event: GameEvent) => {
     const othersAttending = this.getAttending(event.attendees);
     const othersNotAttending = this.getNotAttending(event.attendees);
-    const gameComponent = (
-      <div>
-        {
-          event.game && <Grid container={true}>
-            <Typography variant={'subtitle1'} className={styles.gameComponent}>
-              {`${event.picker.name} is the Sommelier. Their pick is:`}&nbsp;
-            </Typography>
-            <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>
-              {event.game}
-            </Typography>
-          </Grid>
-        }
-        {
-          event.game === null &&
-          <Typography variant={'subtitle1'} className={styles.gameComponent}>
-            {`${event.picker.name} is the Sommelier. They have not picked a game yet`}
-          </Typography>
-        }
-      </div>
-    );
     return (
       <Card className={styles.eventCard} key={`event-${event.id}`}>
         <Grid container={true} direction={'column'}>
@@ -89,7 +70,7 @@ export class AdminEventsDisplay extends React.Component<IProps> {
             </Grid>
           </Grid>
           <Grid item={true}>
-            {gameComponent}
+            <GameDisplay event={event}/>
           </Grid>
           <Divider className={styles.divider}/>
           <Grid container={true} direction={'row'} justify={'space-between'} alignItems={'center'}>

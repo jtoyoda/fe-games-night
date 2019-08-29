@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import logo from 'assets/logo.jpg';
-import { TextField, Button, Typography, CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress, TextField, Typography } from '@material-ui/core';
 import styles from 'ui/containers/register/RegisterContainer.module.css';
 import { authenticationService } from 'services/authenticationService';
-import * as queryString from 'querystring';
 
 interface IProps extends RouteComponentProps {
 
@@ -21,20 +20,17 @@ interface IOwnState {
 class RegisterContainer extends React.Component<IProps, IOwnState> {
   constructor(props: IProps) {
     super(props);
-    const values = queryString.parse(this.props.location.search.replace('?', ''));
-    const email = values.email;
-    if (typeof email == 'string') {
-      this.email = email
-    } else {
-      this.props.history.push('/')
+    const values = this.props.location.search.replace('?', '').split('&');
+    if(values.length > 0) {
+      this.email = values[0].split('=')[1];
+      this.state = {
+        password: '',
+        confirmedPassword: '',
+        passwordsDontMatch: false,
+        loggingIn: false,
+        loginFailed: false,
+      };
     }
-    this.state = {
-      password: '',
-      confirmedPassword: '',
-      passwordsDontMatch: false,
-      loggingIn: false,
-      loginFailed: false,
-    };
   }
 
   private readonly email: string = '';

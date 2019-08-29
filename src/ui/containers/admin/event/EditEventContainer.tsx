@@ -47,7 +47,7 @@ export class EditEventContainer extends React.Component<IProps, IState> {
         name: props.initialValues.name,
         date: moment(props.initialValues.date).valueOf(),
         attendees: props.initialValues.attendees.map(gamer => gamer.id),
-        picker: props.initialValues.picker.id,
+        picker: props.initialValues.picker && props.initialValues.picker.id,
         game: props.initialValues.game,
         gamers: [],
       };
@@ -139,7 +139,8 @@ export class EditEventContainer extends React.Component<IProps, IState> {
             id="datetime-local"
             label="Date"
             type="datetime-local"
-            defaultValue={moment.now()}
+            defaultValue={this.state.date != null ? moment(this.state.date).format('YYYY-MM-DDTHH:mm')
+              : moment(moment.now()).format('YYYY-MM-DDT18:30')}
             fullWidth
             margin={'dense'}
             InputLabelProps={{
@@ -164,7 +165,7 @@ export class EditEventContainer extends React.Component<IProps, IState> {
             </Grid>
             <Grid item={true}>
               <Select
-                value={this.state.picker}
+                value={this.state.picker || -1}
                 onChange={this.changePicker}
                 inputProps={{
                   name: 'Sommelier',
@@ -172,9 +173,10 @@ export class EditEventContainer extends React.Component<IProps, IState> {
                 }}
               >
                 {this.state.gamers.map((gamer) =>
-                  <MenuItem value={gamer.id}>{gamer.name}</MenuItem>,
+                  <MenuItem key={`gamer-choice${gamer.id}`}
+                            value={gamer.id}>{gamer.name}</MenuItem>,
                 )}
-
+                <MenuItem key={`gamer-choice--1`} value={-1}>Nobody</MenuItem>
               </Select>
             </Grid>
           </Grid>

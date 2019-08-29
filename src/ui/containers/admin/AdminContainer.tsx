@@ -206,13 +206,12 @@ class AdminContainer extends React.Component<IProps, IState> {
 
   handleSubmitDeletePopup = (type: 'event' | 'night' | 'gamer', id: number) => () => {
     if (type === 'event') {
-      adminService.deleteEvent(id)
+      adminService.deleteEvent(id).then(this.reloadEvents).then(this.handleCloseDeletePopup);
     } else if (type === 'night') {
-      adminService.deleteNight(id)
+      adminService.deleteNight(id).then(this.reloadNights).then(this.handleCloseDeletePopup);
     } else if (type === 'gamer') {
-      adminService.deleteGamer(id)
+      adminService.deleteGamer(id).then(this.reloadGamers).then(this.handleCloseDeletePopup);
     }
-    this.handleCloseDeletePopup()
   }
 
   handleCloseDeletePopup = () => {
@@ -297,13 +296,13 @@ class AdminContainer extends React.Component<IProps, IState> {
         <AppBar position="sticky">
           <Toolbar>
             <Grid container={true} alignItems={'center'}>
-              <Grid item={true} xs={1}>
+              <Grid item={true} xs={2}>
                 <Link to={'/admin/events'} component={RouterLink} color={'inherit'}>Events</Link>
               </Grid>
-              <Grid item={true} xs={1}>
+              <Grid item={true} xs={2}>
                 <Link to={'/admin/nights'} component={RouterLink} color={'inherit'}>Nights</Link>
               </Grid>
-              <Grid item={true} xs={9}>
+              <Grid item={true} xs={7}>
                 <Link to={'/admin/gamers'} component={RouterLink} color={'inherit'}>Users</Link>
               </Grid>
               <Grid item={true} xs={1}>
