@@ -20,7 +20,7 @@ export class UpdatableGameSelectDisplay extends React.Component<IProps> {
       <Grid container={true} alignItems={'center'}>
         <Grid item={true}>
           <Typography>
-            You are the Sommelier. Your pick is
+            You are the Sommelier. Your pick is&nbsp;
           </Typography>
         </Grid>
         <Grid item={true}>

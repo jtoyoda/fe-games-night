@@ -81,7 +81,7 @@ export class EventGrid extends React.Component<IProps> {
         <UpdatableGameSelectDisplay
           event={event}
           loading={this.props.loading}
-          game={this.props.event.game}
+          game={this.props.game}
           handleGameChange={this.handleGameChange}
           handleGameChangeSubmit={this.props.handleGameChangeSubmit}
         />
