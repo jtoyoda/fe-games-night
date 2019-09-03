@@ -28,7 +28,7 @@ function login(email: string, password: string) {
       token: '',
       type: 'admin',
       email: 'admin',
-      name: 'admin',
+      name: 'ADMIN',
       id: -1
     };
     localStorage.setItem('currentUser', JSON.stringify(gamer));

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { authenticationService } from 'services/authenticationService';
-import { AppBar, Button, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Button, Grid, Toolbar, Typography } from '@material-ui/core';
 import styles from 'ui/containers/dashboard/UserDashboardContainer.module.css';
 import { eventService, GameEvent } from 'services/eventService';
 import { EventsDisplay } from 'ui/components/events/EventsDisplay';
@@ -39,7 +39,7 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
         this.setState({
           events,
           gameMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: it.game}), {}),
-          loadingMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: false}), {})
+          loadingMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: false}), {}),
         });
       } else {
         this.setState({
@@ -53,7 +53,7 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
     const loadingMap = this.state.loadingMap;
     loadingMap[eventId] = true;
     this.setState({
-      loadingMap
+      loadingMap,
     });
     eventService.updateEventAttendance(eventId, isAttending).then(this.reload).finally(
       () => {
@@ -74,7 +74,7 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
     const loadingMap = this.state.loadingMap;
     loadingMap[eventId] = true;
     this.setState({
-      loadingMap
+      loadingMap,
     });
     eventService.updateEventGame(eventId, this.state.gameMap[eventId]).then(this.reload).finally(
       () => {
@@ -89,10 +89,26 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
       <div>
         <AppBar position="sticky">
           <Toolbar>
-            <Typography className={styles.title}>
-              Board Game Schedule
-            </Typography>
-            <Button color="inherit" onClick={this.logout}>Logout</Button>
+            <Grid container={true} justify={'space-between'} alignItems={'center'}>
+              <Grid item={true}>
+                <Typography className={styles.title}>
+                  Board Game Schedule
+                </Typography>
+              </Grid>
+              <Grid item={true}>
+                <Grid container={true} spacing={1} alignItems={'center'}>
+                  <Grid item={true}>
+                    <Typography>
+                      {authenticationService.currentUserValue && authenticationService.currentUserValue.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item={true}>
+                    <Button color="inherit" onClick={this.logout}
+                            variant={'outlined'}>Logout</Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           </Toolbar>
         </AppBar>
         <div className={styles.root}>

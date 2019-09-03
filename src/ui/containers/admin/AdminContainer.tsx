@@ -295,15 +295,26 @@ class AdminContainer extends React.Component<IProps, IState> {
       <div>
         <AppBar position="sticky">
           <Toolbar>
-            <Grid container={true} alignItems={'center'} justify={'space-between'}>
+            <Grid container={true} justify={'space-between'} alignItems={'center'} wrap={'nowrap'}>
               <Grid item={true}>
-                <Link to={'/admin/events'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Events</Link>
-                <Link to={'/admin/groups'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Groups</Link>
-                <Link to={'/admin/gamers'} component={RouterLink} color={'inherit'} className={styles.paddingRight}>Gamers</Link>
+                <Link to={'/admin/events'} component={RouterLink} color={'inherit'}
+                      className={styles.paddingRight}>Events</Link>
+                <Link to={'/admin/groups'} component={RouterLink} color={'inherit'}
+                      className={styles.paddingRight}>Groups</Link>
+                <Link to={'/admin/gamers'} component={RouterLink} color={'inherit'}
+                      className={styles.paddingRight}>Gamers</Link>
 
               </Grid>
               <Grid item={true}>
-                <Button color="inherit" onClick={this.logout}>Logout</Button>
+                <Grid container={true} alignItems={'center'} spacing={1}>
+                  <Grid item={true}>
+                    <Typography>{authenticationService.currentUserValue && authenticationService.currentUserValue.name}</Typography>
+                  </Grid>
+                  <Grid item={true}>
+                    <Button color="inherit" onClick={this.logout}
+                            variant={'outlined'}>Logout</Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Toolbar>
