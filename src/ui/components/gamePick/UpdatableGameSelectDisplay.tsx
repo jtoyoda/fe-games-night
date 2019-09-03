@@ -17,10 +17,10 @@ interface IProps {
 export class UpdatableGameSelectDisplay extends React.Component<IProps> {
   render() {
     return (
-      <Grid container={true} alignItems={'center'}>
+      <Grid container={true} alignItems={'center'} spacing={1}>
         <Grid item={true}>
           <Typography>
-            You are the Sommelier. Your pick is&nbsp;
+            You are the Sommelier. Your pick is
           </Typography>
         </Grid>
         <Grid item={true}>

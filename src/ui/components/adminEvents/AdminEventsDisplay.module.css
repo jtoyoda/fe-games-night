@@ -9,6 +9,7 @@
 .root {
     padding: 8px;
     width: auto;
+    flex-wrap: nowrap !important;
 }
 
 .eventCard {

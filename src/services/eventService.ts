@@ -13,16 +13,16 @@ export interface Gamer {
 }
 
 export interface GamerAttending extends Gamer {
-  attending: boolean;
+  attending?: boolean;
 }
 
 export interface GameEvent {
   id: number;
   name: string;
-  game: string;
+  game?: string;
   date: string;
   attendees: GamerAttending[];
-  picker: Gamer;
+  picker?: Gamer;
 }
 
 function loadEvents(): Promise<GameEvent[]> {

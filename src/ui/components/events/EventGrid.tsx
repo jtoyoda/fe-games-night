@@ -1,19 +1,18 @@
 import * as React from 'react';
 import {
+  Button,
   Card,
   CircularProgress, Divider,
-  FormControlLabel,
   Grid,
-  Switch,
   Typography,
 } from '@material-ui/core';
 import { GameEvent, GamerAttending } from 'services/eventService'
 import styles from 'ui/components/events/EventGrid.module.css';
 import moment from 'moment';
 import { authenticationService } from 'services/authenticationService';
-import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
 import { GameDisplay } from 'ui/components/gamePick/GameDisplay';
 import { UpdatableGameSelectDisplay } from 'ui/components/gamePick/UpdatableGameSelectDisplay';
+import { AttendeeLists } from 'ui/components/attendees/AttendeeLists';
 
 interface IProps {
   event: GameEvent,
@@ -29,8 +28,8 @@ interface IProps {
 
 export class EventGrid extends React.Component<IProps> {
 
-  handleAttendingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.handleAttendingChange(event.target.checked);
+  handleAttendingChange = (attending: boolean) => () => {
+    this.props.handleAttendingChange(attending);
   }
 
   handleGameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,34 +48,10 @@ export class EventGrid extends React.Component<IProps> {
     };
   }
 
-  getOthers = (attendees: GamerAttending[]) => {
-    const email = authenticationService.currentUserValue === null ? '' : authenticationService.currentUserValue.email
-    return attendees.filter((gamer) =>
-      gamer.email !== email,
-    );
-  }
-
-  getOthersAttending = (attendees: GamerAttending[]) => {
-    return this.getOthers(attendees).filter((gamer) =>
-      gamer.attending,
-    );
-  }
-
-  getOthersNotAttending = (attendees: GamerAttending[]) => {
-    return this.getOthers(attendees).filter((gamer) =>
-      !gamer.attending,
-    );
-  }
-
-
   render() {
     const me = this.getMe(this.props.event.attendees);
-    const othersAttending = this.getOthersAttending(this.props.event.attendees);
-    const othersNotAttending = this.getOthersNotAttending(this.props.event.attendees);
     const event = this.props.event;
-    const gameComponent = this.props.event.picker.id !== me.id ? (
-        <GameDisplay event={event}/>
-      ) :
+    const gameComponent = this.props.event.picker && this.props.event.picker.id === me.id ?
       (
         <UpdatableGameSelectDisplay
           event={event}
@@ -85,6 +60,8 @@ export class EventGrid extends React.Component<IProps> {
           handleGameChange={this.handleGameChange}
           handleGameChangeSubmit={this.props.handleGameChangeSubmit}
         />
+      ) : (
+        <GameDisplay event={event}/>
       );
     return (
       <Card key={`${this.props.event.name}-${this.props.event.date}`} className={styles.card}>
@@ -101,13 +78,29 @@ export class EventGrid extends React.Component<IProps> {
             <Grid item={true}>
               <Grid container={true}>
                 <Grid item={true}>
-                  <FormControlLabel
-                    control={
-                      <Switch checked={me.attending} onChange={this.handleAttendingChange}
-                              value="checkedA" disabled={this.props.loading}/>
-                    }
-                    label="Attending"
-                  />
+                  <Grid container={true} spacing={1} alignItems={'center'}>
+                    <Grid item={true}>
+                      <Typography>Attending:</Typography>
+                    </Grid>
+                    <Grid item={true}>
+                      <Button
+                        onClick={this.handleAttendingChange(true)}
+                        variant={me.attending ? 'contained' : 'outlined'}
+                        color={me.attending ? 'primary' : 'default'}
+                      >
+                        Yes
+                      </Button>
+                    </Grid>
+                    <Grid item={true}>
+                      <Button
+                        onClick={this.handleAttendingChange(false)}
+                        variant={me.attending === false ? 'contained' : 'outlined'}
+                        color={me.attending === false ? 'secondary' : 'default'}
+                      >
+                        No
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item={true}>
                   {this.props.loading && <CircularProgress size={30} color={'secondary'}
@@ -120,22 +113,7 @@ export class EventGrid extends React.Component<IProps> {
             {gameComponent}
           </Grid>
           <Divider className={styles.divider}/>
-          <Grid container={true} direction={'row'} justify={'space-between'} alignItems={'center'}>
-            <Grid item={true} xs={6}>
-              <AttendeeCard
-                attendees={othersAttending}
-                title={"Who's Attending"}
-                emptyText={'No one else is currently attending'}
-              />
-            </Grid>
-            <Grid item={true} xs={6}>
-              <AttendeeCard
-                attendees={othersNotAttending}
-                title={"Who's Not Attending"}
-                emptyText={'No one is currently not attending'}
-              />
-            </Grid>
-          </Grid>
+          <AttendeeLists attendees={this.props.event.attendees} highlighted={me}/>
         </Grid>
       </Card>
     )

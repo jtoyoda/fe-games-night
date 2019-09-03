@@ -6,10 +6,10 @@ import {
 import styles from 'ui/components/adminEvents/AdminEventsDisplay.module.css';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
-import { GameEvent, GamerAttending } from 'services/eventService';
+import { GameEvent } from 'services/eventService';
 import moment from 'moment';
 import { GameDisplay } from 'ui/components/gamePick/GameDisplay';
+import { AttendeeLists } from 'ui/components/attendees/AttendeeLists';
 
 
 interface IProps {
@@ -23,23 +23,7 @@ interface IProps {
 }
 
 export class AdminEventsDisplay extends React.Component<IProps> {
-
-
-  getAttending = (attendees: GamerAttending[]) => {
-    return attendees.filter((gamer) =>
-      gamer.attending,
-    );
-  }
-
-  getNotAttending = (attendees: GamerAttending[]) => {
-    return attendees.filter((gamer) =>
-      !gamer.attending,
-    );
-  }
-
   createEventGrid = (event: GameEvent) => {
-    const othersAttending = this.getAttending(event.attendees);
-    const othersNotAttending = this.getNotAttending(event.attendees);
     return (
       <Card className={styles.eventCard} key={`event-${event.id}`}>
         <Grid container={true} direction={'column'}>
@@ -73,22 +57,7 @@ export class AdminEventsDisplay extends React.Component<IProps> {
             <GameDisplay event={event}/>
           </Grid>
           <Divider className={styles.divider}/>
-          <Grid container={true} direction={'row'} justify={'space-between'} alignItems={'center'}>
-            <Grid item={true} xs={6}>
-              <AttendeeCard
-                attendees={othersAttending}
-                title={"Who's Attending"}
-                emptyText={'No one else is currently attending'}
-              />
-            </Grid>
-            <Grid item={true} xs={6}>
-              <AttendeeCard
-                attendees={othersNotAttending}
-                title={"Who's Not Attending"}
-                emptyText={'No one is currently not attending'}
-              />
-            </Grid>
-          </Grid>
+          <AttendeeLists attendees={event.attendees}/>
         </Grid>
       </Card>
     )
@@ -96,9 +65,9 @@ export class AdminEventsDisplay extends React.Component<IProps> {
 
   render() {
     return (
-      <Grid container={true} className={styles.root} direction={'column'}>
+      <Grid container={true} className={styles.root} direction={'column'} justify={'flex-start'}>
         <Grid item={true}>
-          {this.props.events.map(this.createEventGrid)}
+          {this.props.events.sort((a, b) => a.date > b.date ? 1 : -1).map(this.createEventGrid)}
         </Grid>
         <Grid item={true} className={styles.createButtonGrid}>
           <Button onClick={this.props.onCreate} variant={'outlined'} color={'secondary'}
