@@ -36,15 +36,15 @@ export class AttendeeLists extends React.Component<IProps> {
         <Grid item={true} xs={12} sm={6} md={4}>
           <AttendeeCard
             attendees={attending}
-            title={"Who's Attending"}
-            emptyText={'No one else is currently attending'}
+            title={"Attending"}
+            emptyText={'No one is currently attending'}
             highlighted={this.props.highlighted}
           />
         </Grid>
         <Grid item={true} xs={12} sm={6} md={4}>
           <AttendeeCard
             attendees={notAttending}
-            title={"Who's Not Attending"}
+            title={"Not Attending"}
             emptyText={'No one is currently not attending'}
             highlighted={this.props.highlighted}
           />
@@ -52,7 +52,7 @@ export class AttendeeLists extends React.Component<IProps> {
         <Grid item={true} xs={12} md={4}>
           <AttendeeCard
             attendees={notResponded}
-            title={"Who Hasn't Responded"}
+            title={"Not Responded"}
             emptyText={'No one has not responded'}
             highlighted={this.props.highlighted}
           />
