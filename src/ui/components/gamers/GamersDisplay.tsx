@@ -7,7 +7,7 @@ import {
 import styles from 'ui/components/groups/GroupsDisplay.module.css';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Gamer } from 'services/eventService';
+import { Gamer } from 'services/adminService';
 
 
 interface IProps {

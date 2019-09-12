@@ -9,11 +9,11 @@ import {
 } from '@material-ui/core';
 import {
   adminService,
-  CreateEvent,
+  CreateEvent, Gamer,
 } from 'services/adminService';
 import styles from 'ui/containers/admin/group/EditGroupContainer.module.css';
 import { AttendeeSelector } from 'ui/components/attendees/AttendeeSelector';
-import { GameEvent, Gamer } from 'services/eventService';
+import { GameEvent} from 'services/eventService';
 import moment from 'moment';
 
 

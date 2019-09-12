@@ -5,16 +5,24 @@ import { AppBar, Button, Grid, Toolbar, Typography } from '@material-ui/core';
 import styles from 'ui/containers/admin/AdminContainer.module.css';
 import { EditGroupContainer } from 'ui/containers/admin/group/EditGroupContainer';
 import { GroupsDisplay } from 'ui/components/groups/GroupsDisplay';
-import { adminService, CreateEvent, CreateGamer, CreateGroup, Group } from 'services/adminService';
+import {
+  adminService,
+  CreateEvent,
+  CreateGamer,
+  CreateGroup,
+  Gamer,
+  Group,
+} from 'services/adminService';
 import { Link } from '@material-ui/core'
 import { Link as RouterLink } from 'react-router-dom';
 import { capitalize } from '@material-ui/core/utils';
-import { GameEvent, Gamer } from 'services/eventService';
+import { GameEvent} from 'services/eventService';
 import { DeleteDialog } from 'ui/components/delete/DeleteDialog';
 import { AdminEventsDisplay } from 'ui/components/adminEvents/AdminEventsDisplay';
 import { EditEventContainer } from 'ui/containers/admin/event/EditEventContainer';
 import { GamersDisplay } from 'ui/components/gamers/GamersDisplay';
 import { EditGamerContainer } from 'ui/containers/admin/gamer/EditGamerContainer';
+import { EditPickerContainer } from 'ui/containers/admin/group/EditPickerContainer';
 
 type AdminType = 'event' | 'group' | 'gamer';
 
@@ -26,6 +34,7 @@ interface IState {
   groups: Group[];
   editGroupId?: number;
   createGroupPopupVisible: boolean;
+  assignPickerGroupId?: number;
   gamers: Gamer[];
   editGamerId?: number;
   createGamerPopupVisible: boolean;
@@ -193,6 +202,16 @@ class AdminContainer extends React.Component<IProps, IState> {
     });
   }
 
+  onAssignPickers = (groupId: number) => () => {
+    this.setState({
+      assignPickerGroupId: groupId
+    })
+  }
+
+  handleCloseAssignPicker = () => {
+    this.setState({assignPickerGroupId: undefined})
+  }
+
   /*
    * Delete Popup functions
    */
@@ -219,6 +238,7 @@ class AdminContainer extends React.Component<IProps, IState> {
   }
 
   render() {
+    const assignPickerGroup = this.state.groups.find((group) => group.id === this.state.assignPickerGroupId)
     const groups = (
       <div>
         <GroupsDisplay
@@ -226,6 +246,7 @@ class AdminContainer extends React.Component<IProps, IState> {
           onEdit={this.onEditGroup}
           onCreate={this.onCreateGroup}
           onDelete={this.onDelete('group', "Group")}
+          onAssignPickers={this.onAssignPickers}
         />
         {this.state.createGroupPopupVisible && <EditGroupContainer
           displayed={this.state.createGroupPopupVisible}
@@ -239,8 +260,11 @@ class AdminContainer extends React.Component<IProps, IState> {
           submitButtonTitle={'Update'}
           handleSubmit={this.handleEditGroup}
           initialValues={this.state.groups.find((group) => group.id === this.state.editGroupId)}
-        />
-        }
+        />}
+        {this.state.assignPickerGroupId && assignPickerGroup && <EditPickerContainer
+          group={assignPickerGroup}
+          handleClose={this.handleCloseAssignPicker}
+          />}
       </div>
     );
     const events = (
@@ -263,8 +287,7 @@ class AdminContainer extends React.Component<IProps, IState> {
           submitButtonTitle={'Update'}
           handleSubmit={this.handleEditEvent}
           initialValues={this.state.events.find((event) => event.id === this.state.editEventId)}
-        />
-        }
+        />}
       </div>
     );
     const gamers = (
@@ -287,8 +310,7 @@ class AdminContainer extends React.Component<IProps, IState> {
           submitButtonTitle={'Update'}
           handleSubmit={this.handleEditGamer}
           initialValues={this.state.gamers.find((gamer) => gamer.id === this.state.editGamerId)}
-        />
-        }
+        />}
       </div>
     );
     return (

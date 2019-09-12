@@ -1,7 +1,7 @@
-import { Gamer } from 'services/eventService';
 import { Typography } from '@material-ui/core';
 import styles from 'ui/components/attendees/AttendeeCard.module.css';
 import * as React from 'react';
+import { Gamer } from 'services/adminService';
 
 interface IProps {
   attendees: Gamer[]

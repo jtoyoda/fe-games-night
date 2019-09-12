@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import * as React from 'react';
 import styles from 'ui/components/attendees/AttendeeSelector.module.css';
-import { Gamer } from 'services/eventService';
+import { Gamer } from 'services/adminService';
 
 
 interface IProps {

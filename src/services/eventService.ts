@@ -1,16 +1,11 @@
 import { getCurrentUserToken } from 'services/authenticationService';
+import { Gamer } from 'services/adminService';
 
 export const eventService = {
   loadEvents,
   updateEventGame,
   updateEventAttendance,
 };
-
-export interface Gamer {
-  id: number;
-  name: string;
-  email: string;
-}
 
 export interface GamerAttending extends Gamer {
   attending?: boolean;

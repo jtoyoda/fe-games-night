@@ -17,6 +17,7 @@ interface IProps {
   onEdit(groupId: number): () => void;
   onCreate(): void;
   onDelete(groupId: number): () => void;
+  onAssignPickers(groupId: number): () => void;
 }
 
 export class GroupsDisplay extends React.Component<IProps> {
@@ -45,7 +46,12 @@ export class GroupsDisplay extends React.Component<IProps> {
               </Typography>
             </Grid>
             <Grid item={true}>
-              <Grid container={true}>
+              <Grid container={true} alignItems={'center'}>
+                <Grid item={true}>
+                  <Button variant={'outlined'} onClick={this.props.onAssignPickers(group.id)}>
+                    Assign Sommeliers
+                  </Button>
+                </Grid>
                 <Grid item={true} className={styles.fab}>
                   <Fab color="primary" size={'small'} aria-label="edit"
                        onClick={this.props.onEdit(group.id)}>

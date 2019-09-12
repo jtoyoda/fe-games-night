@@ -1,10 +1,12 @@
-import { GameEvent, Gamer } from 'services/eventService';
+import { GameEvent } from 'services/eventService';
 
 export const adminService = {
   loadGroups: loadNights,
   updateGroup: updateNight,
   createGroup: createNight,
   deleteGroup: deleteNight,
+  loadPickers,
+  updatePicker,
   loadGamers,
   updateGamer,
   createGamer,
@@ -13,11 +15,18 @@ export const adminService = {
   updateEvent,
   createEvent,
   deleteEvent,
+  loadUpcomingEvents,
 };
 
 export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
 
 export type RepeatType = 'WEEKLY' | 'BIWEEKLY' | 'NEVER'
+
+export interface Gamer {
+  id: number;
+  name: string;
+  email: string;
+}
 
 export interface Group {
   id: number;
@@ -51,6 +60,19 @@ export interface CreateEvent {
   picker?: number;
   date: number;
   game?: string;
+}
+
+export interface UpdatePicker {
+  gamerId: number,
+  weekNumber: number,
+}
+
+export interface PickerMap {
+  [key: number]: Gamer
+}
+
+export interface UpcomingEventMap {
+  [key: number]: number
 }
 
 function loadNights(): Promise<Group[]> {
@@ -104,6 +126,49 @@ function deleteNight(nightId: number) {
   };
 
   return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/nights/${nightId}`, requestOptions)
+}
+
+function loadUpcomingEvents(nightId: number): Promise<UpcomingEventMap> {
+  const requestOptions = {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+  };
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/nights/${nightId}/upcoming`, requestOptions)
+    .then((response: Response) => {
+      return response.text().then(text => {
+        return text && JSON.parse(text);
+      })
+    })
+}
+
+function loadPickers(nightId: number): Promise<PickerMap> {
+  const requestOptions = {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+  };
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/nights/${nightId}/pickers`, requestOptions)
+    .then((response: Response) => {
+      return response.text().then(text => {
+        return text && JSON.parse(text);
+      })
+    })
+}
+
+function updatePicker(nightId: number, body: UpdatePicker) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  };
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/nights/${nightId}/pickers`, requestOptions)
+    .then((response: Response) => {
+      return response.text().then(text => {
+        return text && JSON.parse(text);
+      })
+    })
 }
 
 function loadGamers(): Promise<Gamer[]> {

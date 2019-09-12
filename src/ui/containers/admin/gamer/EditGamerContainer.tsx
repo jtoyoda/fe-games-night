@@ -7,9 +7,8 @@ import {
   DialogTitle, TextField,
 } from '@material-ui/core';
 import {
-  CreateGamer,
+  CreateGamer, Gamer,
 } from 'services/adminService';
-import { Gamer } from 'services/eventService';
 
 
 interface IProps {

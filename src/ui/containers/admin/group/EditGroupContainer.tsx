@@ -7,10 +7,16 @@ import {
   DialogTitle, Grid, MenuItem, Select,
   TextField, Typography,
 } from '@material-ui/core';
-import { adminService, CreateGroup, DayOfWeek, Group, RepeatType } from 'services/adminService';
+import {
+  adminService,
+  CreateGroup,
+  DayOfWeek,
+  Gamer,
+  Group,
+  RepeatType,
+} from 'services/adminService';
 import styles from 'ui/containers/admin/group/EditGroupContainer.module.css';
 import { AttendeeSelector } from 'ui/components/attendees/AttendeeSelector';
-import { Gamer } from 'services/eventService';
 
 
 interface IProps {

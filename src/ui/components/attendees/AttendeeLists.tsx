@@ -1,7 +1,8 @@
 import { Grid } from '@material-ui/core';
 import { AttendeeCard } from 'ui/components/attendees/AttendeeCard';
 import * as React from 'react';
-import { Gamer, GamerAttending } from 'services/eventService';
+import { GamerAttending } from 'services/eventService';
+import { Gamer } from 'services/adminService';
 
 interface IProps {
   attendees: Gamer[]
