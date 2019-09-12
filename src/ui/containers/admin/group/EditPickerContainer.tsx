@@ -4,8 +4,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle, Grid,
-
+  DialogTitle,
+  Grid,
 } from '@material-ui/core';
 import { adminService, Group, PickerMap, UpcomingEventMap } from 'services/adminService';
 import { PickerCard } from 'ui/components/groups/PickerCard';
@@ -55,8 +55,7 @@ export class EditPickerContainer extends React.Component<IProps, IState> {
     )
   }
 
-  createPickerCard = (number: number, currentWeekNumber: number, date: number) => {
-    const weekNumber = number + currentWeekNumber;
+  createPickerCard = (weekNumber: number, date: number) => {
     const currentPicker = this.state.pickers[weekNumber];
     return (
       <Grid item={true} key={weekNumber} className={styles.row}>
@@ -71,17 +70,13 @@ export class EditPickerContainer extends React.Component<IProps, IState> {
   }
 
   render() {
-    var i = 0;
     return (
       <Dialog open={true}>
         <DialogTitle id="form-dialog-title">Assign Sommeliers</DialogTitle>
         <DialogContent>
           <Grid container={true} alignItems={'center'} justify={'space-between'}>
-            {Object.keys(this.state.upcomingNights).map((key) => {
-              const card = this.createPickerCard(i, +key, this.state.upcomingNights[key]);
-              i = i + 1;
-              return card;
-            })}
+            {Object.keys(this.state.upcomingNights).map((key) =>
+              this.createPickerCard(+key, this.state.upcomingNights[key]))}
           </Grid>
         </DialogContent>
         <DialogActions>
