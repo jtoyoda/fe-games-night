@@ -3,7 +3,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { authenticationService } from 'services/authenticationService';
 import { AppBar, Button, Grid, Toolbar, Typography } from '@material-ui/core';
 import styles from 'ui/containers/dashboard/UserDashboardContainer.module.css';
-import { eventService, GameEvent } from 'services/eventService';
+import { eventService, GameEvent, IGame } from 'services/eventService';
 import { EventsDisplay } from 'ui/components/events/EventsDisplay';
 
 interface IProps extends RouteComponentProps {
@@ -11,9 +11,10 @@ interface IProps extends RouteComponentProps {
 
 interface IState {
   events: GameEvent[]
-  gameMap: { [key: number]: string }
+  gameMap: { [key: number]: IGame }
   loadingMap: { [key: number]: boolean }
 }
+
 
 class UserDashboardContainer extends React.Component<IProps, IState> {
 
@@ -37,7 +38,10 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
       if (initialLoad) {
         this.setState({
           events,
-          gameMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: it.game}), {}),
+          gameMap: events.reduce((accumulator, it) => ({
+            ...accumulator,
+            [it.id]: {name: it.game, id: it.gameId},
+          }), {}),
           loadingMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: false}), {}),
         });
       } else {
@@ -61,12 +65,15 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
       });
   }
 
-  handleGameChange = (eventId: number, game: string) => {
+  handleGameChange = (eventId: number, name: string, id?: number) => {
     const gameMap = this.state.gameMap;
-    gameMap[eventId] = game;
+    gameMap[eventId] = {
+      name,
+      id,
+    };
     this.setState({
       gameMap,
-    })
+    });
   }
 
   handleGameChangeSubmit = (eventId: number) => {

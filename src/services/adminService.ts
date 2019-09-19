@@ -60,6 +60,7 @@ export interface CreateEvent {
   picker?: number;
   date: number;
   game?: string;
+  gameId?: number;
 }
 
 export interface UpdatePicker {

@@ -2,3 +2,8 @@
     position: relative;
     margin-left: -60px;
 }
+
+.autocomplete {
+    flex: 1;
+    min-width: 250px;
+}

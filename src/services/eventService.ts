@@ -18,6 +18,12 @@ export interface GameEvent {
   date: string;
   attendees: GamerAttending[];
   picker?: Gamer;
+  gameId?: number;
+}
+
+export interface IGame {
+  name: string,
+  id?: number,
 }
 
 function loadEvents(): Promise<GameEvent[]> {
@@ -41,8 +47,8 @@ function updateEventAttendance(eventId: number, attending: boolean) {
   return _updateEvent(eventId, {attending: attending})
 }
 
-function updateEventGame(eventId: number, game: string) {
-  return _updateEvent(eventId, {game: game})
+function updateEventGame(eventId: number, game: IGame) {
+  return _updateEvent(eventId, {game: game.name, gameId: game.id})
 }
 
 function _updateEvent(eventId: number, body: {[key: string]: any}) {

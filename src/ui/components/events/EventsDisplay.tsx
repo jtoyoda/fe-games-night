@@ -3,18 +3,22 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import { GameEvent } from 'services/eventService'
+import { GameEvent, IGame } from 'services/eventService'
 import styles from 'ui/components/events/EventsDisplay.module.css';
 import { EventGrid } from 'ui/components/events/EventGrid';
 import moment from 'moment';
 
 interface IProps {
   events: GameEvent[],
-  gameMap: {[key: number]: string},
+  gameMap: { [key: number]: IGame },
+
   handleAttendingChange(eventId: number, isAttending: boolean): void,
-  handleGameChange(eventId: number, game: string): void,
+
+  handleGameChange(eventId: number, game: string, id?: number): void,
+
   handleGameChangeSubmit(eventId: number): void,
-  loadingMap: {[key: number]: boolean},
+
+  loadingMap: { [key: number]: boolean },
 }
 
 export class EventsDisplay extends React.Component<IProps> {
@@ -31,6 +35,10 @@ export class EventsDisplay extends React.Component<IProps> {
     this.props.handleGameChangeSubmit(eventId);
   }
 
+  handleGameSelect = (eventId: number) => (value: string, id: number) => {
+    this.props.handleGameChange(eventId, value, id)
+  }
+
   createEventGrid = (event: GameEvent) => {
     return (
       <EventGrid
@@ -39,6 +47,7 @@ export class EventsDisplay extends React.Component<IProps> {
         game={this.props.gameMap[event.id]}
         handleAttendingChange={this.handleAttendingChange(event.id)}
         handleGameChange={this.handleGameChange(event.id)}
+        handleGameSelect={this.handleGameSelect(event.id)}
         handleGameChangeSubmit={this.handleGameChangeSubmit(event.id)}
         loading={this.props.loadingMap[event.id]}
       />
@@ -49,7 +58,7 @@ export class EventsDisplay extends React.Component<IProps> {
     return (
       <Grid className={styles.root} container={true}>
         {this.props.events.length === 0 && <Typography>You have no upcoming events</Typography>}
-        {this.props.events.sort((eventa, eventb) =>{
+        {this.props.events.sort((eventa, eventb) => {
           const momentA = moment(eventa.date);
           const momentB = moment(eventb.date);
           if (momentA > momentB) {

@@ -6,7 +6,7 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import { GameEvent, GamerAttending } from 'services/eventService'
+import { GameEvent, GamerAttending, IGame } from 'services/eventService'
 import moment from 'moment';
 import { authenticationService } from 'services/authenticationService';
 import { GameDisplay } from 'ui/components/gamePick/GameDisplay';
@@ -19,12 +19,14 @@ import 'ui/components/events/AddToCalendar.css'
 
 interface IProps {
   event: GameEvent,
-  game: string,
+  game: IGame,
   loading: boolean,
 
   handleAttendingChange(isAttending: boolean): void,
 
   handleGameChange(game: string): void,
+
+  handleGameSelect(game: string, id?: number): void,
 
   handleGameChangeSubmit(): void,
 }
@@ -33,10 +35,6 @@ export class EventGrid extends React.Component<IProps> {
 
   handleAttendingChange = (attending: boolean) => () => {
     this.props.handleAttendingChange(attending);
-  }
-
-  handleGameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.handleGameChange(event.target.value);
   }
 
   getMe = (attendees: GamerAttending[]) => {
@@ -54,14 +52,21 @@ export class EventGrid extends React.Component<IProps> {
   render() {
     const me = this.getMe(this.props.event.attendees);
     const event = this.props.event;
+    const existingGame = this.props.event.game ? {
+      name: this.props.event.game,
+      id: this.props.event.gameId,
+    } : undefined
+    const prompt = 'You are the Sommelier. Your pick is'
     const gameComponent = this.props.event.picker && this.props.event.picker.id === me.id ?
       (
         <UpdatableGameSelectDisplay
-          event={event}
+          existingGame={existingGame}
           loading={this.props.loading}
           game={this.props.game}
-          handleGameChange={this.handleGameChange}
+          handleGameChange={this.props.handleGameChange}
+          handleGameSelect={this.props.handleGameSelect}
           handleGameChangeSubmit={this.props.handleGameChangeSubmit}
+          prompt={prompt}
         />
       ) : (
         <GameDisplay event={event}/>
@@ -122,7 +127,8 @@ export class EventGrid extends React.Component<IProps> {
             </Grid>
           </Grid>
           <Grid item={true}>
-            <Grid container={true} direction={'row'} justify={'space-between'} alignItems={'center'}>
+            <Grid container={true} direction={'row'} justify={'space-between'}
+                  alignItems={'center'}>
               <Grid item={true}>
                 {gameComponent}
               </Grid>

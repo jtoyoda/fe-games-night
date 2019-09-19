@@ -15,6 +15,7 @@ import styles from 'ui/containers/admin/group/EditGroupContainer.module.css';
 import { AttendeeSelector } from 'ui/components/attendees/AttendeeSelector';
 import { GameEvent} from 'services/eventService';
 import moment from 'moment';
+import { UpdatableGameSelectDisplay } from 'ui/components/gamePick/UpdatableGameSelectDisplay';
 
 
 interface IProps {
@@ -101,10 +102,16 @@ export class EditEventContainer extends React.Component<IProps, IState> {
 
   }
 
-  changeGame = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const game = event.currentTarget.value;
+  changeGame = (game: string) => {
     this.setState({
       game,
+    });
+  }
+
+  changeGameSelect = (game: string, gameId: number) => {
+    this.setState({
+      game,
+      gameId,
     });
   }
 
@@ -124,6 +131,11 @@ export class EditEventContainer extends React.Component<IProps, IState> {
   }
 
   render() {
+    const existingGame = this.props.initialValues && this.props.initialValues.game ? {
+      name: this.props.initialValues.game,
+      id: this.props.initialValues.gameId,
+    } : undefined;
+    const canSubmit = this.state.attendees && this.state.name && this.state.date;
     return (
       <Dialog open={this.props.displayed}>
         <DialogTitle id="form-dialog-title">Create Special Event</DialogTitle>
@@ -148,14 +160,14 @@ export class EditEventContainer extends React.Component<IProps, IState> {
             }}
             onChange={this.changeDate}
           />
-          {
-            this.createTextField({
-              value: this.state.game || '',
-              label: 'Game (Optional)',
-              id: 'game',
-              onChange: this.changeGame,
-            })
-          }
+          <UpdatableGameSelectDisplay
+            existingGame={existingGame}
+            game={{name: this.state.game || '', id: this.state.gameId}}
+            loading={false}
+            handleGameChange={this.changeGame}
+            handleGameSelect={this.changeGameSelect}
+            prompt={'Game:'}
+          />
           <Grid container={true} alignItems={'center'} justify={'space-between'}
                 className={styles.selector}>
             <Grid item={true}>
@@ -191,7 +203,7 @@ export class EditEventContainer extends React.Component<IProps, IState> {
           <Button onClick={this.props.handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={this.handleCreate} color="primary">
+          <Button onClick={this.handleCreate} color="primary" disabled={!canSubmit}>
             {this.props.submitButtonTitle}
           </Button>
         </DialogActions>

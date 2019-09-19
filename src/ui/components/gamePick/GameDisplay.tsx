@@ -10,6 +10,17 @@ interface IProps {
 export class GameDisplay extends React.Component<IProps> {
   render() {
     const event = this.props.event;
+    const game = event.gameId ? (
+      <a href={`https://boardgamegeek.com/boardgame/${event.gameId}`} target="_blank">
+        <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>
+          {event.game}
+        </Typography>
+      </a>
+    ): (
+      <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>
+        {event.game}
+      </Typography>
+    )
     return (
       <div>
         {
@@ -17,9 +28,7 @@ export class GameDisplay extends React.Component<IProps> {
             <Typography variant={'subtitle1'}>
               {event.picker ? `${event.picker.name} is the Sommelier. Their pick` : 'The game choice'} is: &nbsp;
             </Typography>
-            <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>
-              {event.game}
-            </Typography>
+            {game}
           </Grid>
         }
         {
