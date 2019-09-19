@@ -11,7 +11,7 @@ export class GameDisplay extends React.Component<IProps> {
   render() {
     const event = this.props.event;
     const game = event.gameId ? (
-      <a href={`https://boardgamegeek.com/boardgame/${event.gameId}`} target="_blank">
+      <a href={`https://boardgamegeek.com/boardgame/${event.gameId}`} target="_blank" rel="noopener noreferrer">
         <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>
           {event.game}
         </Typography>

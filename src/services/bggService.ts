@@ -18,7 +18,7 @@ function getAutoComplete(search: string): Promise<IOption> {
     mode: 'cors',
   };
 
-  return fetch(`https://cors-anywhere.herokuapp.com/https://boardgamegeek.com/search/boardgame?q=${search}&showcount=20`, requestOptions)
+  return fetch(`${process.env.REACT_APP_API_URL}/api/v1/bgg/search?q=${search}`, requestOptions)
     .then((response: Response) => {
       return response.text().then(text => {
         return text && JSON.parse(text)['items'].map(item => {
