@@ -6,7 +6,6 @@ import styles from 'ui/containers/dashboard/UserDashboardContainer.module.css';
 import { eventService, GameEvent } from 'services/eventService';
 import { EventsDisplay } from 'ui/components/events/EventsDisplay';
 
-
 interface IProps extends RouteComponentProps {
 }
 

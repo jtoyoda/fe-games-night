@@ -14,7 +14,7 @@ export class GameDisplay extends React.Component<IProps> {
       <div>
         {
           event.game && <Grid container={true}>
-            <Typography variant={'subtitle1'} className={styles.gameComponent}>
+            <Typography variant={'subtitle1'}>
               {event.picker ? `${event.picker.name} is the Sommelier. Their pick` : 'The game choice'} is: &nbsp;
             </Typography>
             <Typography variant={'subtitle1'} className={styles.gameComponent} color={'secondary'}>

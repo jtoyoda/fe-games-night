@@ -28,3 +28,8 @@
 .divider {
     margin-bottom: 10px !important;
 }
+
+.addToCalendar {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
