@@ -2,9 +2,9 @@ import { Button, CircularProgress, Grid, Typography } from '@material-ui/core';
 import styles from 'ui/components/gamePick/UpdatableGameSelectDisplay.module.css';
 import * as React from 'react';
 import { IGame } from 'services/eventService';
-import Async from 'react-select/async';
 import { bggService, IOption } from 'services/bggService';
 import { InputActionMeta } from 'react-select/src/types';
+import AsyncCreatable from 'react-select/async-creatable';
 
 
 interface IProps {
@@ -33,6 +33,12 @@ export class UpdatableGameSelectDisplay extends React.Component<IProps> {
       this.props.handleGameSelect(singleOption.label, singleOption.value);
     }
   }
+  createNewOption = (inputValue: string, optionLabel: React.ReactNode) => {
+    return {
+      label: inputValue,
+      value: undefined,
+    };
+  }
 
   render() {
     const defaultOption: IOption | undefined = this.props.game ? {
@@ -47,13 +53,15 @@ export class UpdatableGameSelectDisplay extends React.Component<IProps> {
           </Typography>
         </Grid>
         <Grid item={true} className={styles.autocomplete}>
-          <Async
+          <AsyncCreatable<IOption>
+            isClearable={true}
             defaultValue={defaultOption}
-            defaultOptions={defaultOption && [defaultOption]}
             cacheOptions
             loadOptions={bggService.getAutoComplete}
             onInputChange={this.handleGameChange}
             onChange={this.handleGameSelect}
+            createOptionPosition={'first'}
+            getNewOptionData={this.createNewOption}
           />
         </Grid>
         {this.props.handleGameChangeSubmit &&
