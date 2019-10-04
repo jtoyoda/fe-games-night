@@ -31,9 +31,9 @@ export class AttendeeLists extends React.Component<IProps> {
   render() {
     const attending = this.getAttending(this.props.attendees);
     const notAttending = this.getNotAttending(this.props.attendees);
-    const notResponded = this.getNotResponded(this.props.attendees)
+    const notResponded = this.getNotResponded(this.props.attendees);
     return (
-      <Grid container={true} direction={'row'} justify={'space-between'} alignItems={'center'}>
+      <Grid container={true} direction={'row'} justify={'space-between'}>
         <Grid item={true} xs={12} sm={6} md={4}>
           <AttendeeCard
             attendees={attending}
