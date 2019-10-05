@@ -71,14 +71,14 @@ export class EventGrid extends React.Component<IProps> {
       ) : (
         <GameDisplay event={event}/>
       );
-    const calendarDescription = this.props.game ? `We are playing ${this.props.game}` : 'The game has not been chosen yet';
+    const calendarDescription = this.props.game ? `We are playing ${this.props.game.name}` : 'The game has not been chosen yet';
     const dateMoment = moment(this.props.event.date);
     const calendarEvent = {
       title: this.props.event.name,
       description: calendarDescription,
       location: process.env.REACT_APP_ADDRESS,
       startTime: dateMoment.toISOString(true),
-      endTime: dateMoment.add(4, 'hour').toISOString(true),
+      endTime: moment(dateMoment.valueOf()).add(4, 'hour').toISOString(true),
     };
     return (
       <Card key={`${this.props.event.name}-${this.props.event.date}`} className={styles.card}>
