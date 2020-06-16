@@ -5,11 +5,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
+  Grid, Typography,
 } from '@material-ui/core';
 import { adminService, Group, PickerMap, UpcomingEventMap } from 'services/adminService';
 import { PickerCard } from 'ui/components/groups/PickerCard';
 import styles from 'ui/containers/admin/group/EditPickerContainer.module.css';
+import { GameEvent } from 'services/eventService';
 
 
 interface IProps {
@@ -20,6 +21,7 @@ interface IProps {
 interface IState {
   pickers: PickerMap;
   upcomingNights: UpcomingEventMap;
+  currentEvents: GameEvent[];
 }
 
 export class EditPickerContainer extends React.Component<IProps, IState> {
@@ -27,10 +29,20 @@ export class EditPickerContainer extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       pickers: {},
-      upcomingNights: [],
+      upcomingNights: {},
+      currentEvents: []
     }
     this.loadPickers();
     this.loadUpcoming();
+    this.loadCurrentNights();
+  }
+
+  loadCurrentNights = () => {
+    adminService.loadEventsForGroup(this.props.group).then((currentEvents) => {
+      this.setState({
+          currentEvents
+      })
+    })
   }
 
   loadPickers = () => {
@@ -55,6 +67,25 @@ export class EditPickerContainer extends React.Component<IProps, IState> {
     )
   }
 
+  onCurrentPickerUpdate = (event: GameEvent) => (gamerId: number) => {
+    adminService.updateEvent(event.id, {picker: gamerId}).then(
+      this.loadCurrentNights
+    )
+  }
+
+  createPickerCardForCurrentEvent = (event: GameEvent) => {
+    return (
+      <Grid item={true} key={event.id} className={styles.row}>
+        <PickerCard
+          date={Date.parse(event.date)}
+          gamers={this.props.group.attendees}
+          currentPicker={event.picker}
+          onUpdate={this.onCurrentPickerUpdate(event)}
+        />
+      </Grid>
+    )
+  }
+
   createPickerCard = (weekNumber: number, date: number) => {
     const currentPicker = this.state.pickers[weekNumber];
     return (
@@ -74,6 +105,16 @@ export class EditPickerContainer extends React.Component<IProps, IState> {
       <Dialog open={true}>
         <DialogTitle id="form-dialog-title">Assign Sommeliers</DialogTitle>
         <DialogContent>
+          <Typography variant={'subtitle1'} className={styles.underlined}>
+            Scheduled Nights
+          </Typography>
+            <Grid container={true} alignItems={'center'} justify={'space-between'}>
+              {this.state.currentEvents.length > 0 ? this.state.currentEvents.map((event) =>
+                  this.createPickerCardForCurrentEvent(event)) : <Typography> No Events Scheduled</Typography>}
+            </Grid>
+          <Typography variant={'subtitle1'} className={styles.underlined}>
+            Upcoming Nights
+          </Typography>
           <Grid container={true} alignItems={'center'} justify={'space-between'}>
             {Object.keys(this.state.upcomingNights).map((key) =>
               this.createPickerCard(+key, this.state.upcomingNights[key]))}

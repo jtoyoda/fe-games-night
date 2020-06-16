@@ -1,3 +1,7 @@
 .row {
     width: 100%;
 }
+
+.underlined {
+    text-decoration: underline;
+}

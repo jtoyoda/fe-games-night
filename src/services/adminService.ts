@@ -16,6 +16,7 @@ export const adminService = {
   createEvent,
   deleteEvent,
   loadUpcomingEvents,
+  loadEventsForGroup,
 };
 
 export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
@@ -63,6 +64,15 @@ export interface CreateEvent {
   gameId?: number;
 }
 
+export interface UpdateEvent {
+  name?: string;
+  attendees?: number[];
+  picker?: number;
+  date?: number;
+  game?: string;
+  gameId?: number;
+}
+
 export interface UpdatePicker {
   gamerId: number,
   weekNumber: number,
@@ -83,6 +93,20 @@ function loadNights(): Promise<Group[]> {
   };
 
   return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/nights`, requestOptions)
+    .then((response: Response) => {
+      return response.text().then(text => {
+        return text && JSON.parse(text);
+      })
+    })
+}
+
+function loadEventsForGroup(group: Group): Promise<GameEvent[]> {
+  const requestOptions = {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json'},
+  };
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/nights/${group.id}/events`, requestOptions)
     .then((response: Response) => {
       return response.text().then(text => {
         return text && JSON.parse(text);
@@ -239,7 +263,7 @@ function loadEvents(): Promise<GameEvent[]> {
     })
 }
 
-function updateEvent(eventId: number, body: CreateEvent) {
+function updateEvent(eventId: number, body: UpdateEvent) {
   const requestOptions = {
     method: 'PUT',
     headers: {'Content-Type': 'application/json'},
