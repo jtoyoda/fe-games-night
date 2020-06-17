@@ -109,8 +109,12 @@ export class EditPickerContainer extends React.Component<IProps, IState> {
             Scheduled Nights
           </Typography>
             <Grid container={true} alignItems={'center'} justify={'space-between'}>
-              {this.state.currentEvents.length > 0 ? this.state.currentEvents.map((event) =>
-                  this.createPickerCardForCurrentEvent(event)) : <Typography> No Events Scheduled</Typography>}
+              {this.state.currentEvents.length > 0 ? this.state.currentEvents
+                .sort(function(a,b){
+                    return Date.parse(a.date) - Date.parse(b.date)}
+                  )
+                .map((event) => this.createPickerCardForCurrentEvent(event)) :
+                <Typography> No Events Scheduled</Typography>}
             </Grid>
           <Typography variant={'subtitle1'} className={styles.underlined}>
             Upcoming Nights
