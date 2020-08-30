@@ -17,6 +17,7 @@ export const adminService = {
   deleteEvent,
   loadUpcomingEvents,
   loadEventsForGroup,
+  editAttendee,
 };
 
 export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
@@ -271,6 +272,21 @@ function updateEvent(eventId: number, body: UpdateEvent) {
   };
 
   return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/admin/events/${eventId}`, requestOptions)
+    .then((response: Response) => {
+      return response.text().then(text => {
+        return text && JSON.parse(text);
+      })
+    })
+}
+
+function editAttendee(eventId: number, gamerId: number, attending: boolean) {
+  const requestOptions = {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({attending}),
+  };
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/v1/gamesNight/admin/events/${eventId}/gamers/${gamerId}`, requestOptions)
     .then((response: Response) => {
       return response.text().then(text => {
         return text && JSON.parse(text);

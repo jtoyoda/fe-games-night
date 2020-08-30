@@ -9,11 +9,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { GameEvent } from 'services/eventService';
 import moment from 'moment';
 import { GameDisplay } from 'ui/components/gamePick/GameDisplay';
-import { AttendeeLists } from 'ui/components/attendees/AttendeeLists';
+import { EditableAttendeeLists } from 'ui/components/adminEvents/EditableAttendeeLists';
 
 
 interface IProps {
   events: GameEvent[];
+
+  onEditAttendee(eventId: number, attendeeId: number, isAttending: boolean): void;
 
   onEdit(id: number): () => void;
 
@@ -23,6 +25,10 @@ interface IProps {
 }
 
 export class AdminEventsDisplay extends React.Component<IProps> {
+  onEditAttendee = (eventId: number) => (attendeeId: number, isAttending: boolean) => {
+    this.props.onEditAttendee(eventId, attendeeId, isAttending)
+  }
+
   createEventGrid = (event: GameEvent) => {
     return (
       <Card className={styles.eventCard} key={`event-${event.id}`}>
@@ -57,7 +63,7 @@ export class AdminEventsDisplay extends React.Component<IProps> {
             <GameDisplay event={event}/>
           </Grid>
           <Divider className={styles.divider}/>
-          <AttendeeLists attendees={event.attendees}/>
+          <EditableAttendeeLists attendees={event.attendees} onEdit={this.onEditAttendee(event.id)}/>
         </Grid>
       </Card>
     )

@@ -122,6 +122,12 @@ class AdminContainer extends React.Component<IProps, IState> {
     this.setState({editEventId: eventId});
   }
 
+  onEditAttendee = (eventId: number, attendeeId: number, isAttending: boolean) => {
+    adminService.editAttendee(eventId, attendeeId, isAttending).then(() => {
+      this.reloadEvents();
+    })
+  }
+
   onCreateEvent = () => {
     this.setState({createEventPopupVisible: true})
   }
@@ -271,6 +277,7 @@ class AdminContainer extends React.Component<IProps, IState> {
       <div>
         <AdminEventsDisplay
           events={this.state.events}
+          onEditAttendee={this.onEditAttendee}
           onEdit={this.onEditEvent}
           onCreate={this.onCreateEvent}
           onDelete={this.onDelete('event', "Event")}
