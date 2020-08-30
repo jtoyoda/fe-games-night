@@ -52,13 +52,13 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
     });
   }
 
-  handleAttendingChange = (eventId: number, isAttending: boolean) => {
+  handleAttendingChange = (eventId: number, isAttending?: boolean, message?: string) => {
     const loadingMap = this.state.loadingMap;
     loadingMap[eventId] = true;
     this.setState({
       loadingMap,
     });
-    eventService.updateEventAttendance(eventId, isAttending).then(this.reload).finally(
+    eventService.updateEventAttendance(eventId, isAttending, message).then(this.reload).finally(
       () => {
         loadingMap[eventId] = false;
         this.setState({loadingMap})

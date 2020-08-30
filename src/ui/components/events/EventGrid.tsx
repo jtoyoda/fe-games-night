@@ -16,13 +16,14 @@ import AddToCalendar from 'react-add-to-calendar';
 import 'react-add-to-calendar/dist/react-add-to-calendar.css'
 import styles from 'ui/components/events/EventGrid.module.css';
 import 'ui/components/events/AddToCalendar.css'
+import { EditMessageDialog } from 'ui/components/events/EditMessageDialog';
 
 interface IProps {
   event: GameEvent,
   game: IGame,
   loading: boolean,
 
-  handleAttendingChange(isAttending: boolean): void,
+  handleAttendingChange(isAttending?: boolean, message?: string): void,
 
   handleGameChange(game: string): void,
 
@@ -31,10 +32,35 @@ interface IProps {
   handleGameChangeSubmit(): void,
 }
 
-export class EventGrid extends React.Component<IProps> {
+interface IState {
+  editMessageOpen: boolean
+}
 
-  handleAttendingChange = (attending: boolean) => () => {
+export class EventGrid extends React.Component<IProps, IState> {
+
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      editMessageOpen: false
+    }
+  }
+
+  handleAttendingChange = (attending?: boolean) => () => {
     this.props.handleAttendingChange(attending);
+  }
+
+  openMessageDialog = () => {
+    this.setState({
+      editMessageOpen: true
+    })
+  }
+
+  handleEditMessageSubmit = (message?: string) => {
+    console.log(message)
+    message && this.props.handleAttendingChange(undefined, message)
+    this.setState({
+      editMessageOpen: false
+    })
   }
 
   getMe = (attendees: GamerAttending[]) => {
@@ -117,6 +143,15 @@ export class EventGrid extends React.Component<IProps> {
                         No
                       </Button>
                     </Grid>
+                    <Grid item={true}>
+                      <Button
+                        onClick={this.openMessageDialog}
+                        variant='outlined'
+                        color='default'
+                      >
+                        {me.message ? 'Edit' : 'Add'} Message
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
                 <Grid item={true}>
@@ -140,6 +175,11 @@ export class EventGrid extends React.Component<IProps> {
           <Divider className={styles.divider}/>
           <AttendeeLists attendees={this.props.event.attendees} highlighted={me}/>
         </Grid>
+        <EditMessageDialog
+          open={this.state.editMessageOpen}
+          handleClose={this.handleEditMessageSubmit}
+          message={me.message}
+        />
       </Card>
     )
   }

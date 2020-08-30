@@ -5,7 +5,7 @@ import { GamerAttending } from 'services/eventService';
 import { Gamer } from 'services/adminService';
 
 interface IProps {
-  attendees: Gamer[]
+  attendees: GamerAttending[]
   highlighted?: Gamer
 }
 

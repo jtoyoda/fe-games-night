@@ -9,6 +9,7 @@ export const eventService = {
 
 export interface GamerAttending extends Gamer {
   attending?: boolean;
+  message?: string;
 }
 
 export interface GameEvent {
@@ -43,8 +44,8 @@ function loadEvents(): Promise<GameEvent[]> {
 
 
 
-function updateEventAttendance(eventId: number, attending: boolean) {
-  return _updateEvent(eventId, {attending: attending})
+function updateEventAttendance(eventId: number, attending?: boolean, message?: string) {
+  return _updateEvent(eventId, {attending, message})
 }
 
 function updateEventGame(eventId: number, game: IGame) {

@@ -12,7 +12,7 @@ interface IProps {
   events: GameEvent[],
   gameMap: { [key: number]: IGame },
 
-  handleAttendingChange(eventId: number, isAttending: boolean): void,
+  handleAttendingChange(eventId: number, isAttending?: boolean, message?: string): void,
 
   handleGameChange(eventId: number, game: string, id?: number): void,
 
@@ -23,8 +23,8 @@ interface IProps {
 
 export class EventsDisplay extends React.Component<IProps> {
 
-  handleAttendingChange = (eventId: number) => (checked: boolean) => {
-    this.props.handleAttendingChange(eventId, checked);
+  handleAttendingChange = (eventId: number) => (isAttending?: boolean, message?: string) => {
+    this.props.handleAttendingChange(eventId, isAttending, message);
   }
 
   handleGameChange = (eventId: number) => (value: string) => {
