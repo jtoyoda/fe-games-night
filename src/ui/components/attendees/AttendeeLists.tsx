@@ -7,6 +7,7 @@ import { Gamer } from 'services/adminService';
 interface IProps {
   attendees: GamerAttending[]
   highlighted?: Gamer
+  maxPlayers?: number
 }
 
 export class AttendeeLists extends React.Component<IProps> {
@@ -32,12 +33,13 @@ export class AttendeeLists extends React.Component<IProps> {
     const attending = this.getAttending(this.props.attendees);
     const notAttending = this.getNotAttending(this.props.attendees);
     const notResponded = this.getNotResponded(this.props.attendees);
+    const maxPlayersString = this.props.maxPlayers ? `(Max Players ${this.props.maxPlayers})` : "(No Player Cap)"
     return (
       <Grid container={true} direction={'row'} justify={'space-between'}>
         <Grid item={true} xs={12} sm={6} md={4}>
           <AttendeeCard
             attendees={attending}
-            title={"Attending"}
+            title={`Attending ${maxPlayersString && maxPlayersString}`}
             emptyText={'No one is currently attending'}
             highlighted={this.props.highlighted}
           />

@@ -5,6 +5,7 @@ export const eventService = {
   loadEvents,
   updateEventGame,
   updateEventAttendance,
+  updateEventMaxPlayers,
 };
 
 export interface GamerAttending extends Gamer {
@@ -20,6 +21,7 @@ export interface GameEvent {
   attendees: GamerAttending[];
   picker?: Gamer;
   gameId?: number;
+  maxPlayers?: number;
 }
 
 export interface IGame {
@@ -50,6 +52,10 @@ function updateEventAttendance(eventId: number, attending?: boolean, message?: s
 
 function updateEventGame(eventId: number, game: IGame) {
   return _updateEvent(eventId, {game: game.name, gameId: game.id})
+}
+
+function updateEventMaxPlayers(eventId: number, maxPlayers: number) {
+  return _updateEvent(eventId, {maxPlayers: maxPlayers})
 }
 
 function _updateEvent(eventId: number, body: {[key: string]: any}) {

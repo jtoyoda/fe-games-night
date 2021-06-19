@@ -9,7 +9,7 @@ import styles from 'ui/components/adminEvents/EditableAttendeeLists.module.css';
 
 interface IProps {
   attendees: GamerAttending[],
-
+  maxPlayers?: number,
   onEdit(attendeeId: number, isAttending: boolean): void;
 }
 
@@ -57,7 +57,9 @@ export function EditableAttendeeLists(props: IProps) {
       <Grid container={true} direction={'row'}>
         <Grid item={true}>
           <Typography variant={'h6'} className={styles.withMargin}>
-            Attending
+            Attending{ props.maxPlayers ? `(Max Players ${props.maxPlayers})` : "(No" +
+            " Player Cap)"
+          }
           </Typography>
           <Droppable droppableId="attending">
             {(provided, snapshot) => (

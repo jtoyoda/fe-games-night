@@ -3,7 +3,7 @@ import {
   Button,
   Card,
   CircularProgress, Divider,
-  Grid,
+  Grid, TextField,
   Typography,
 } from '@material-ui/core';
 import { GameEvent, GamerAttending, IGame } from 'services/eventService'
@@ -28,6 +28,10 @@ interface IProps {
   handleGameChange(game: string): void,
 
   handleGameSelect(game: string, id?: number): void,
+
+  handleMaxPlayersChange(maxPlayers?: number): void,
+
+  handleMaxPlayersSubmit(): void,
 
   handleGameChangeSubmit(): void,
 }
@@ -61,6 +65,11 @@ export class EventGrid extends React.Component<IProps, IState> {
     this.setState({
       editMessageOpen: false
     })
+  }
+
+  handleChangeMaxPlayers = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const maxPlayers = (event.target.value as number);
+    this.props.handleMaxPlayersChange(maxPlayers)
   }
 
   getMe = (attendees: GamerAttending[]) => {
@@ -97,6 +106,33 @@ export class EventGrid extends React.Component<IProps, IState> {
       ) : (
         <GameDisplay event={event}/>
       );
+    const maxPlayersComponent = this.props.event.picker && this.props.event.picker.id === me.id ?
+      (
+        <Grid container={true} alignItems={'center'} spacing={1}>
+          <Grid item={true}>
+            <TextField
+              id="maxPlayerCount"
+              label="Max Players"
+              type="number"
+              defaultValue={this.props.event.maxPlayers}
+              fullWidth
+              margin={'dense'}
+              onChange={this.handleChangeMaxPlayers}
+            />
+          </Grid>
+          <Grid item={true}>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={this.props.loading}
+              onClick={this.props.handleMaxPlayersSubmit}
+            >
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
+      ) :
+      <></>
     const calendarDescription = this.props.game ? `We are playing ${this.props.game.name}` : 'The game has not been chosen yet';
     const dateMoment = moment(this.props.event.date);
     const calendarEvent = {
@@ -106,6 +142,9 @@ export class EventGrid extends React.Component<IProps, IState> {
       startTime: dateMoment.toISOString(true),
       endTime: moment(dateMoment.valueOf()).add(4, 'hour').toISOString(true),
     };
+    const eventFull = event.maxPlayers &&
+      event.attendees &&
+      event.attendees.filter(attendee => attendee.attending).length >= event.maxPlayers
     return (
       <Card key={`${this.props.event.name}-${this.props.event.date}`} className={styles.card}>
         <Grid container={true} direction={'column'} className={styles.root}>
@@ -130,6 +169,7 @@ export class EventGrid extends React.Component<IProps, IState> {
                         onClick={this.handleAttendingChange(true)}
                         variant={me.attending ? 'contained' : 'outlined'}
                         color={me.attending ? 'primary' : 'default'}
+                        disabled={eventFull || false}
                       >
                         Yes
                       </Button>
@@ -166,6 +206,7 @@ export class EventGrid extends React.Component<IProps, IState> {
                   alignItems={'center'}>
               <Grid item={true}>
                 {gameComponent}
+                {maxPlayersComponent}
               </Grid>
               <Grid item={true} className={styles.addToCalendar}>
                 <AddToCalendar event={calendarEvent}/>
@@ -173,7 +214,7 @@ export class EventGrid extends React.Component<IProps, IState> {
             </Grid>
           </Grid>
           <Divider className={styles.divider}/>
-          <AttendeeLists attendees={this.props.event.attendees} highlighted={me}/>
+          <AttendeeLists attendees={this.props.event.attendees} highlighted={me} maxPlayers={this.props.event.maxPlayers}/>
         </Grid>
         <EditMessageDialog
           open={this.state.editMessageOpen}

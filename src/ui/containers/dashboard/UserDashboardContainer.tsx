@@ -13,6 +13,7 @@ interface IState {
   events: GameEvent[]
   gameMap: { [key: number]: IGame }
   loadingMap: { [key: number]: boolean }
+  maxPlayersMap: { [key: number]: number}
 }
 
 
@@ -24,6 +25,7 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
       events: [],
       gameMap: {},
       loadingMap: {},
+      maxPlayersMap: {},
     }
     this.reload(true)
   }
@@ -43,6 +45,7 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
             [it.id]: {name: it.game, id: it.gameId},
           }), {}),
           loadingMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: false}), {}),
+          maxPlayersMap: events.reduce((accumulator, it) => ({...accumulator, [it.id]: it.maxPlayers}), {}),
         });
       } else {
         this.setState({
@@ -74,6 +77,28 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
     this.setState({
       gameMap,
     });
+  }
+
+  handleMaxPlayersChange = (eventId: number, maxPlayers: number) => {
+    const maxPlayersMap = this.state.maxPlayersMap
+    maxPlayersMap[eventId] = maxPlayers
+    this.setState({
+      maxPlayersMap,
+    });
+  }
+
+  handleMaxPlayersSubmit = (eventId: number) => {
+    const loadingMap = this.state.loadingMap;
+    loadingMap[eventId] = true;
+    this.setState({
+      loadingMap,
+    });
+    eventService.updateEventMaxPlayers(eventId, this.state.maxPlayersMap[eventId]).then(this.reload)
+      .finally(() => {
+         loadingMap[eventId] = false;
+         this.setState({loadingMap});
+       },
+      )
   }
 
   handleGameChangeSubmit = (eventId: number) => {
@@ -126,6 +151,8 @@ class UserDashboardContainer extends React.Component<IProps, IState> {
             handleAttendingChange={this.handleAttendingChange}
             handleGameChange={this.handleGameChange}
             handleGameChangeSubmit={this.handleGameChangeSubmit}
+            handleMaxPlayersChange={this.handleMaxPlayersChange}
+            handleMaxPlayersSubmit={this.handleMaxPlayersSubmit}
             gameMap={this.state.gameMap}
             loadingMap={this.state.loadingMap}
           />

@@ -18,6 +18,10 @@ interface IProps {
 
   handleGameChangeSubmit(eventId: number): void,
 
+  handleMaxPlayersChange(eventId: number, maxPlayers: number): void
+
+  handleMaxPlayersSubmit(eventId: number): void,
+
   loadingMap: { [key: number]: boolean },
 }
 
@@ -35,6 +39,14 @@ export class EventsDisplay extends React.Component<IProps> {
     this.props.handleGameChangeSubmit(eventId);
   }
 
+  handleMaxPlayersChange = (eventId: number) => (maxPlayers: number) => {
+    this.props.handleMaxPlayersChange(eventId, maxPlayers)
+  }
+
+  handleMaxPlayersSubmit = (eventId: number) => () => {
+    this.props.handleMaxPlayersSubmit(eventId)
+  }
+
   handleGameSelect = (eventId: number) => (value: string, id: number) => {
     this.props.handleGameChange(eventId, value, id)
   }
@@ -49,6 +61,8 @@ export class EventsDisplay extends React.Component<IProps> {
         handleGameChange={this.handleGameChange(event.id)}
         handleGameSelect={this.handleGameSelect(event.id)}
         handleGameChangeSubmit={this.handleGameChangeSubmit(event.id)}
+        handleMaxPlayersChange={this.handleMaxPlayersChange(event.id)}
+        handleMaxPlayersSubmit={this.handleMaxPlayersSubmit(event.id)}
         loading={this.props.loadingMap[event.id]}
       />
     )

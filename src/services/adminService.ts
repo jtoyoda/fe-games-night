@@ -63,6 +63,7 @@ export interface CreateEvent {
   date: number;
   game?: string;
   gameId?: number;
+  maxPlayers?: number;
 }
 
 export interface UpdateEvent {
@@ -72,6 +73,7 @@ export interface UpdateEvent {
   date?: number;
   game?: string;
   gameId?: number;
+  maxPlayerCount?: number;
 }
 
 export interface UpdatePicker {

@@ -63,7 +63,7 @@ export class AdminEventsDisplay extends React.Component<IProps> {
             <GameDisplay event={event}/>
           </Grid>
           <Divider className={styles.divider}/>
-          <EditableAttendeeLists attendees={event.attendees} onEdit={this.onEditAttendee(event.id)}/>
+          <EditableAttendeeLists attendees={event.attendees} onEdit={this.onEditAttendee(event.id)} maxPlayers={event.maxPlayers}/>
         </Grid>
       </Card>
     )

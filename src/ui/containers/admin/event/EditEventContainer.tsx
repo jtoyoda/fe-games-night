@@ -52,6 +52,7 @@ export class EditEventContainer extends React.Component<IProps, IState> {
         picker: props.initialValues.picker && props.initialValues.picker.id,
         game: props.initialValues.game,
         gamers: [],
+        maxPlayers: props.initialValues.maxPlayers,
       };
     } else {
       this.state = {
@@ -130,6 +131,13 @@ export class EditEventContainer extends React.Component<IProps, IState> {
     })
   }
 
+  changeMaxPlayerCount = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const maxPlayerCount = (event.target.value as number);
+    this.setState({
+      maxPlayers: maxPlayerCount,
+    })
+  }
+
   render() {
     const existingGame = this.props.initialValues && this.props.initialValues.game ? {
       name: this.props.initialValues.game,
@@ -167,6 +175,15 @@ export class EditEventContainer extends React.Component<IProps, IState> {
             handleGameChange={this.changeGame}
             handleGameSelect={this.changeGameSelect}
             prompt={'Game:'}
+          />
+          <TextField
+            id="maxPlayerCount"
+            label="Max Players"
+            type="number"
+            defaultValue={this.state.maxPlayers}
+            fullWidth
+            margin={'dense'}
+            onChange={this.changeMaxPlayerCount}
           />
           <Grid container={true} alignItems={'center'} justify={'space-between'}
                 className={styles.selector}>
