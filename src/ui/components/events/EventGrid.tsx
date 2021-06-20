@@ -142,7 +142,7 @@ export class EventGrid extends React.Component<IProps, IState> {
       startTime: dateMoment.toISOString(true),
       endTime: moment(dateMoment.valueOf()).add(4, 'hour').toISOString(true),
     };
-    const eventFull = event.maxPlayers &&
+    const eventFull = me.attending ? false : event.maxPlayers &&
       event.attendees &&
       event.attendees.filter(attendee => attendee.attending).length >= event.maxPlayers
     return (
